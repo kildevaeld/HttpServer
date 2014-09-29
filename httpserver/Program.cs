@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SocketServer;
+using SocketServer.Handlers;
+
 
 namespace httpserver
 {
@@ -10,7 +9,12 @@ namespace httpserver
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello http server");
+			var handler = new SocketHTTPHandler ();
+
+			var server = new Server { Handler = handler };
+
+			server.Listen (8080);
+
         }
     }
 }
