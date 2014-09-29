@@ -14,24 +14,33 @@ namespace SocketServer
 
 		public void Initialize (ISocketClient client)
 		{
-			int read = client.Read ();
+			//int read = client.Read ();
 
-			string str = Encoding.UTF8.GetString (client.Buffer, 0, read);
+			client.ReadAsync ().ContinueWith (x => {
+				string str = Encoding.UTF8.GetString (client.Buffer, 0, x.Result.Length);
 
-			var req = new HTTPRequest (str);
-			var res = new HTTPResponse (client);
+				HTTPRequest req = null;
+				var res = new HTTPResponse (client);
 
+				try {
+					req = new HTTPRequest (str);
+				} catch (HttpRequestException e) {
+					res.Send(e.StatusCode, "Illegal request");
+				}
 
-			try {
-				this.Middleware.Run (null, res);
-			} catch (Exception e) {
-				res.Send (500);
-			}
-			if (!res.IsFinished) {
-				res.Send (404, "Not Found");
-			}
+				try {
+					this.Middleware.Run (req, res);
+				} catch (Exception e) {
+					res.Send (500);
+				}
+				if (!res.IsFinished) {
+					res.Send (404, "Not Found");
+				}
 
-			client.Close ();
+				client.Close ();
+				
+			});
+
 
 		}
 

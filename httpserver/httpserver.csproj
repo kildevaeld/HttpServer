@@ -49,6 +49,11 @@
     <Compile Include="Middleware\Middleware.cs" />
     <Compile Include="SocketHTTPHandler.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Middleware\Static.cs" />
+    <Compile Include="HTTP\MimeTypes.cs" />
+    <Compile Include="HTTP\HTTPResonseAsync.cs" />
+    <Compile Include="Middleware\Logger.cs" />
+    <Compile Include="HTTP\HeaderCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

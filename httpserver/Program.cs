@@ -11,6 +11,9 @@ namespace httpserver
         {
 			var handler = new SocketHTTPHandler ();
 
+			handler.Middleware.Use (new Logger());
+			handler.Middleware.Use (new Static ("/Users/rasmus"));
+
 			var server = new Server { Handler = handler };
 
 			server.Listen (8080);
