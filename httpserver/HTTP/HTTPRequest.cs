@@ -12,21 +12,24 @@ namespace SocketServer
 
 	public class HTTPRequest
 	{
+		// Protocol 
 		public Double Version { get; private set; }
 		public string Protocol { get; private set; }
-		public HeaderCollection Headers { get; private set; }
 		public string Method { get; private set; }
+		public string Path { get; private set; }
+
+		public HeaderCollection Headers { get; private set; }
+		public string UserAgent { get; private set; }
+
 		public string Body { get; private set; }
 
-		public string Path { get; private set; }
 		// TODO public string Accept { get; private set; } 
-		// TODO public string Query { get; private set; }
-		public HTTPRequest (string request) {
+		public IReadOnlyDictionary<string,string> Query { get; private set; }
+		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
-			this.ParseRequest (request);
 		}
 			
-		protected void ParseRequest(string request) {
+		public void ParseRequest(string request) {
 
 			// TODO: Get methods from another place
 			var r = "^(GET|POST|PUT|DELETE|HEAD|PATH) " +
@@ -42,11 +45,8 @@ namespace SocketServer
 
 			var i = split [0].IndexOf ("\r\n");
 
+			// Parse headers
 			string[] headers = Regex.Split(split [0].Substring (i, split [0].Length - i), "\r\n");
-
-			// Set properties
-			//this.Headers = 
-
 			foreach (var header in headers) {
 				if (string.IsNullOrEmpty (header))
 					continue;
@@ -58,6 +58,11 @@ namespace SocketServer
 				Headers [h] = header.Substring (index, header.Length - index);
 			}
 
+			var userAgent = Headers ["User-Agent"];
+			if (userAgent != null) {
+				this.UserAgent = userAgent;	
+			}
+
 			this.Method = match.Groups[1].Value;
 			this.Body = split [1];
 
@@ -65,16 +70,19 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
-			var userAgent = Headers ["User-Agent"];
-			if (userAgent != null) {
-				
+			var qi = this.Path.LastIndexOf ("?");
+			if (qi > 0) {
+				split = this.Path.Split('?');
+				var q = Uri.UnescapeDataString ("?" + split [1]);
+				this.Path = split [0];
+				this.Query = Utils.ParseQueryString (q);
 			}
-
 		}
 
 		public override string ToString ()
 		{
-			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}]", Headers, Method, Body, Version, Protocol, Path);
+			var q = this.Query.Select (x => string.Format("{0} : {1}",x.Key,x.Value));
+			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, String.Join(",",q));
 		}
 	}
 }
