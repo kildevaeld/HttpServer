@@ -12,8 +12,8 @@ namespace SocketServer
 	public static class Utils
 	{
 		public static readonly string UrlRegex = "(\\b(https?)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]\n";
-		public static readonly string StatusLine = "^(GET|POST|PUT|DELETE|HEAD) (https?:\\/\\/[\\-A-Za-z0-9+&@#\\/%?=~_|!:,.;]*[\\-A-Za-z0-9+&@#\\/%=~_|‌​]|\\/.*) HTTP\\/(1\\.[01]).*";
-		//private static readonly Regex _regex = new Regex(@"[?|&](\w+)=([^?|^&]+)");
+		public static readonly string StatusLine = @"^(GET|POST|PUT|DELETE|HEAD) (https?:\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|​]|\/.*) (HTTP)?\/(1\.[01]).*";
+
 		private static readonly Regex _regex = new Regex (@"([^?=&]+)(=([^&]*))?", RegexOptions.Multiline);
 
 		public static IReadOnlyDictionary<string, object> ParseQueryString(string query)

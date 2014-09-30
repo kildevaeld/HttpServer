@@ -69,21 +69,51 @@ namespace SocketServer
 
 			// TODO: Get methods elsewhere
 			// Maches: "Method filepath|uri protocol/version"
-			var r = "^(GET|POST|PUT|DELETE|HEAD|PATH) " +
-				"(https?:\\/\\/[\\-A-Za-z0-9+&@#\\/%?=~_|!:,.;]*[\\-A-Za-z0-9+&@#\\/%=~_|​]|\\/.*|)" +
-				" (HTTP)\\/(1\\.[01]).*"; 
+			//var r = "^(GET|POST|PUT|DELETE|HEAD|PATH)? " +
+			//	"(https?:\\/\\/[\\-A-Za-z0-9+&@#\\/%?=~_|!:,.;]*[\\-A-Za-z0-9+&@#\\/%=~_|​]|\\/.*|?)" +
+			//	" (HTTP)?\\/(1\\.[2])?.*"; 
 
-			var match = Regex.Match (request, r);
+			var match = Regex.Match (request, Utils.StatusLine);
+
 			if (!match.Success) {
-				throw new HTTPException(400,HttpStatusCodes.Get(400));
+				throw new HTTPException (400, HttpStatusCodes.Get (400));
 			}
 
 			var split = Regex.Split (request, "\r\n\r\n");
 
-			var i = split [0].IndexOf ("\r\n");
+		
+			var index = split [0].IndexOf ("\r\n");
+			// Is it fullform
+			if (index > 0) {
+				// Parse headers
+				string[] headers = Regex.Split(split [0].Substring (index, split [0].Length - index), "\r\n");
+				this.ParseHeaders (headers);
+			}
 
-			// Parse headers
-			string[] headers = Regex.Split(split [0].Substring (i, split [0].Length - i), "\r\n");
+
+			this.Method = match.Groups[1].Value;
+
+			// Is there a body
+			if (split.Count() == 2)
+				this.Body = split [1];
+
+			this.Version = double.Parse(match.Groups [4].Value.Replace('.',','));
+			this.Protocol = match.Groups [3].Value;
+			this.Path = match.Groups [2].Value;
+
+			 
+			if (this.Path.LastIndexOf ("?") > 0) {
+
+				split = this.Path.Split('?');
+				var q = Uri.UnescapeDataString ("?" + split [1]);
+
+				this.Path = split [0];
+				this.Query = Utils.ParseQueryString (q);
+			}
+		}
+
+		protected void ParseHeaders (string[] headers) {
+
 			foreach (var header in headers) {
 				if (string.IsNullOrEmpty (header))
 					continue;
@@ -100,23 +130,8 @@ namespace SocketServer
 				this.UserAgent = userAgent;	
 			}
 
-			this.Method = match.Groups[1].Value;
-			this.Body = split [1];
-
-			this.Version = double.Parse(match.Groups [4].Value.Replace('.',','));
-			this.Protocol = match.Groups [3].Value;
-			this.Path = match.Groups [2].Value;
-
-			 
-			if (this.Path.LastIndexOf ("?") > 0) {
-
-				split = this.Path.Split('?');
-				var q = Uri.UnescapeDataString ("?" + split [1]);
-
-				this.Path = split [0];
-				this.Query = Utils.ParseQueryString (q);
-			}
 		}
+
 
 		public override string ToString ()
 		{
