@@ -133,6 +133,9 @@ namespace SocketServer
 		}
 		#endregion
 
+		/// <summary>
+		/// End the response. This should render the response unuseable for any more sends/writes
+		/// </summary>
 		public void End() {
 			this._headerSent = true;
 			this.IsFinished = true;

@@ -56,6 +56,7 @@ namespace SocketServer
 				if (response.IsFinished)
 					break;
 			}
+				
 		}
 
 		public void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {

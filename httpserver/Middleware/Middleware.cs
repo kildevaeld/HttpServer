@@ -11,7 +11,7 @@ namespace SocketServer
 	}
 
 	/// <summary>
-	///  A middleware is a method execute in sekvens on every client request.
+	///  A middleware is a method execute in sekvens every client request.
 	///  
 	/// </summary>
 	public class Middleware
