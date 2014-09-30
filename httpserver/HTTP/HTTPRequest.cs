@@ -24,7 +24,7 @@ namespace SocketServer
 		public string Body { get; private set; }
 
 		// TODO public string Accept { get; private set; } 
-		public IReadOnlyDictionary<string,string> Query { get; private set; }
+		public IReadOnlyDictionary<string,object> Query { get; private set; }
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
 		}
@@ -81,8 +81,10 @@ namespace SocketServer
 
 		public override string ToString ()
 		{
-			var q = this.Query.Select (x => string.Format("{0} : {1}",x.Key,x.Value));
-			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, String.Join(",",q));
+			var q = Utils.DictinaryToString ((IDictionary<string,object>)this.Query);
+
+			//this.Query.Select (x => string.Format("{0} : {1}",x.Key,x.Value));
+			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, q);
 		}
 	}
 }
