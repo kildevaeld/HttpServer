@@ -41,6 +41,7 @@ namespace SocketServer
 
 			Headers = new HeaderCollection ();
 			StatusCode = 200;
+			this.Body = null;
 		}
 
 		/// <summary>
@@ -73,6 +74,10 @@ namespace SocketServer
 
 			if (body != null)
 				this.Body = body;
+
+			if (this.Body == null) {
+				this.Body = HttpStatusCodes.Get (this.StatusCode);
+			}
 
 			var ret = this.Write (this.ToString ());
 

@@ -55,6 +55,7 @@
     <Compile Include="HTTP\HeaderCollection.cs" />
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="HTTP\HTTPException.cs" />
+    <Compile Include="HTTP\HttpStatusCodes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

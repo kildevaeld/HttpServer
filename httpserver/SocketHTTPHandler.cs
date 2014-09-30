@@ -55,7 +55,7 @@ namespace SocketServer
 
 
 				if (!res.IsFinished) {
-					res.Send (404, "Not Found");
+					res.Send (404);
 				}
 
 				client.Close ();

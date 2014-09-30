@@ -36,7 +36,7 @@ namespace SocketServer
 
 			var match = Regex.Match (request, r);
 			if (!match.Success) {
-				throw new HTTPException { StatusCode = 400 };
+				throw new HTTPException(400,HttpStatusCodes.Get(400));
 			}
 
 			var split = Regex.Split (request, "\r\n\r\n");
