@@ -54,6 +54,7 @@
     <Compile Include="HTTP\HTTPResonseAsync.cs" />
     <Compile Include="Middleware\Logger.cs" />
     <Compile Include="HTTP\HeaderCollection.cs" />
+    <Compile Include="Middleware\Router.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -31,6 +31,8 @@ namespace SocketServer
 
 			foreach (var handler in _handlers) {
 				handler(request, response);
+				if (response.IsFinished)
+					break;
 			}
 		}
 	}
