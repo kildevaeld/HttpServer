@@ -57,6 +57,8 @@
     <Compile Include="HTTP\HTTPException.cs" />
     <Compile Include="HTTP\HttpStatusCodes.cs" />
     <Compile Include="Middleware\Html.cs" />
+    <Compile Include="Middleware\Query.cs" />
+    <Compile Include="Middleware\Multipart.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

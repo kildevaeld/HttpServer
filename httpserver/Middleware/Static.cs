@@ -33,11 +33,6 @@ namespace SocketServer.Middlewares
 
 
 		}
-
-		//private void 
-			
-
-	
 	}
 }
 

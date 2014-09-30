@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Net.Sockets;
+
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
 namespace SocketServer
 {
 
@@ -57,11 +62,11 @@ namespace SocketServer
 		#endregion
 
 		// TODO public string Accept { get; private set; } 
-		public IReadOnlyDictionary<string,object> Query { get; private set; }
+		public string Query { get; private set; }
 
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
-			this.Query = new Dictionary<string, object> ();
+			this.Query = null;
 		}
 
 		/// <summary>
@@ -70,7 +75,7 @@ namespace SocketServer
 		/// <param name="request">Request.</param>
 		// TODO: Should handle streams
 		public void ParseRequest(string request) {
-
+		
 
 			ParseStatusLine (request);
 
@@ -94,7 +99,7 @@ namespace SocketServer
 				var q = Uri.UnescapeDataString ("?" + split [1]);
 
 				this.Path = split [0];
-				this.Query = Utils.ParseQueryString (q);
+				this.Query = q;
 			}
 		}
 
@@ -128,6 +133,7 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
+
 		}
 
 		protected void ParseHeaders (string[] headers) {
@@ -153,7 +159,7 @@ namespace SocketServer
 	
 		public override string ToString ()
 		{
-			var q = Utils.DictinaryToString ((IDictionary<string,object>)this.Query);
+			var q = this.Query;
 			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, q);
 		}
 	}

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 namespace SocketServer.Middlewares
 {
 
+
+
 	public delegate void MiddlewareHandler(HTTPRequest request, HTTPResponse response);
 	public delegate void MiddlewareErrorHandler(HTTPRequest request, HTTPResponse response, HTTPException exception);
 

@@ -2,7 +2,9 @@
 using System.Text;
 using SocketServer.Handlers;
 using System.Threading;
-
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using SocketServer.Middlewares;
 
 namespace SocketServer
@@ -28,9 +30,9 @@ namespace SocketServer
 		{
 
 			ThreadPool.QueueUserWorkItem((object cli) => {
-			//client.ReadAsync ().ContinueWith (x => {
-				//string str = Encoding.UTF8.GetString (client.Buffer, 0, x.Result.Length);
+
 				client = (ISocketClient)cli;
+
 				int len = client.Read();
 
 				if (len == 0) {
@@ -38,7 +40,7 @@ namespace SocketServer
 					return;
 				}
 
-				string str = Encoding.UTF8.GetString (client.Buffer, 0, len);
+				string str = Encoding.UTF8.GetString(client.Buffer,0, len);
 
 				var res = new HTTPResponse (client);
 				var req = new HTTPRequest ();
@@ -48,6 +50,7 @@ namespace SocketServer
 				} catch (HTTPException e) {
 					res.Send(e.StatusCode, e.Message);
 				}
+
 
 				try {
 					this.Middleware.Run (req, res);
