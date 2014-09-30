@@ -12,8 +12,7 @@ namespace SocketServer
 		{
 			_headers = new Dictionary<string, string> ();
 		}
-
-
+			
 		public string this[string header] {
 			get { 
 				var lk = Sanitize(header);

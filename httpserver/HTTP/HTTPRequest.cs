@@ -32,6 +32,7 @@ namespace SocketServer
 		public void ParseRequest(string request) {
 
 			// TODO: Get methods from another place
+			// Maches: "Method filepath|uri protocol/version"
 			var r = "^(GET|POST|PUT|DELETE|HEAD|PATH) " +
 				"(https?:\\/\\/[\\-A-Za-z0-9+&@#\\/%?=~_|!:,.;]*[\\-A-Za-z0-9+&@#\\/%=~_|​]|\\/.*|)" +
 				" (HTTP)\\/(1\\.[01]).*"; 
@@ -82,8 +83,6 @@ namespace SocketServer
 		public override string ToString ()
 		{
 			var q = Utils.DictinaryToString ((IDictionary<string,object>)this.Query);
-
-			//this.Query.Select (x => string.Format("{0} : {1}",x.Key,x.Value));
 			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, q);
 		}
 	}

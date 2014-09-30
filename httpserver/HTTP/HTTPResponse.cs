@@ -43,20 +43,36 @@ namespace SocketServer
 			StatusCode = 200;
 		}
 
+		/// <summary>
+		/// Set response headers
+		/// </summary>
+		/// <param name="header">Header.</param>
+		/// <param name="value">Value.</param>
 		public void Set(string header, object value) {
 			// TODO: Validate and sanitize
 			this.Headers [header] = Convert.ToString (value);
 		}
 
 		#region send
+		/// <summary>
+		/// Send message to client with a default statuscode of 200 and end the response
+		/// </summary>
+		/// <param name="body">Body.</param>
 		public int Send(string body) {
 			return this.Send (200, body);
 		}
 
-		public int Send(int statusCode, string body = "") {
+		/// <summary>
+		/// Send message to client with optional body and end the response
+		/// </summary>
+		/// <param name="statusCode">Status code.</param>
+		/// <param name="body">Body.</param>
+		public int Send(int statusCode, string body = null) {
 		
 			this.StatusCode = statusCode;
-			this.Body = body;
+
+			if (body != null)
+				this.Body = body;
 
 			var ret = this.Write (this.ToString ());
 
@@ -65,6 +81,10 @@ namespace SocketServer
 			return ret;
 		}
 
+		/// <summary>
+		/// Sends the file and end the response
+		/// </summary>
+		/// <param name="path">Path.</param>
 		public void SendFile(string path) {
 			string ext;
 			int index = path.LastIndexOf ('.');
@@ -87,15 +107,22 @@ namespace SocketServer
 				using (NetworkStream ns = new NetworkStream (_client.Socket)) {
 					stream.CopyTo (ns);
 				}
+			
 			}
 
 			this.End ();
 
 		}
 
+		/// <summary>
+		/// Write the specified message, but don't end the response.
+		/// </summary>
+		/// <param name="message">Message.</param>
 		public int Write(string message) {
+			// If the finished flag is up, the reponse and underlying socket is closed
 			if (this.IsFinished)
 				throw new Exception ("Socket already finished!");
+
 			var b = Encoding.UTF8.GetBytes(message);
 			return _client.Send (b, b.Length);
 		}

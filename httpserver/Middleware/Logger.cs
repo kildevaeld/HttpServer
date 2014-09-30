@@ -4,12 +4,7 @@ namespace SocketServer
 {
 	public class Logger : IMiddelware
 	{
-
-		public Logger ()
-		{
-
-		}
-
+	
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 			var sw = new Stopwatch ();
 			Console.WriteLine ("Print " + request);
