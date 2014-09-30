@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocketServer
+namespace SocketServer.Middlewares
 {
 
 	public delegate void MiddlewareHandler(HTTPRequest request, HTTPResponse response);

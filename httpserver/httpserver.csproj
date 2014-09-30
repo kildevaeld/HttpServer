@@ -7,7 +7,7 @@
     <ProjectGuid>{B86C3B46-C946-4AC4-84A3-3BEF3E2B9BA6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>httpserver</RootNamespace>
+    <RootNamespace>SocketServer</RootNamespace>
     <AssemblyName>httpserver</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -56,6 +56,7 @@
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="HTTP\HTTPException.cs" />
     <Compile Include="HTTP\HttpStatusCodes.cs" />
+    <Compile Include="Middleware\Html.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

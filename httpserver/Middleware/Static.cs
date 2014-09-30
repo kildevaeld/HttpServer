@@ -2,13 +2,14 @@
 using System.IO;
 using System.Net.Mime;
 
-namespace SocketServer
+namespace SocketServer.Middlewares
 {
 	public class Static : IMiddelware
 	{
 
 		public string _rootPath; 
 
+		// TODO: Initial check if rootPath exists
 		public Static (string root)
 		{
 			_rootPath = root;

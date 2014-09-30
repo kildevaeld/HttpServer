@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SocketServer
+namespace SocketServer.Middlewares
 {
 
 	public enum Methods {Get, Post, Put, Delete }

@@ -1,7 +1,7 @@
 ﻿using System;
 using SocketServer;
 using SocketServer.Handlers;
-
+using SocketServer.Middlewares;
 
 namespace httpserver
 {
@@ -11,14 +11,14 @@ namespace httpserver
         {
 			var handler = new SocketHTTPHandler ();
 			var router = new Router ();
-
+			handler.Middleware.Use(new Html("/Users/rasmus/Sites/"));
 			handler.Middleware.Use (new Logger());
 			handler.Middleware.Use (new Static ("/Users/rasmus"));
 
 
 			handler.Middleware.Use (router);
 
-			router.Get("/", delegate(HTTPRequest request, HTTPResponse response) {
+			router.Get("/test", delegate(HTTPRequest request, HTTPResponse response) {
 				response.Send("Hello, World! - From " + request.Path);
 			});
 

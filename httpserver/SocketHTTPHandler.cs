@@ -2,6 +2,9 @@
 using System.Text;
 using SocketServer.Handlers;
 using System.Threading;
+
+using SocketServer.Middlewares;
+
 namespace SocketServer
 {
 	public class SocketHTTPHandler : ISocketServerHandler 
@@ -49,9 +52,9 @@ namespace SocketServer
 					this.Middleware.Run (req, res);
 				} catch (HTTPException e) {
 					res.Send(e.StatusCode, e.Message);
-				} catch (Exception e) {
-					res.Send (500);
-				} 
+				}/* catch (Exception e) {
+					res.Send (500,e.StackTrace);
+				} */
 
 
 				if (!res.IsFinished) {

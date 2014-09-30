@@ -55,8 +55,10 @@ namespace SocketServer
 
 		// TODO public string Accept { get; private set; } 
 		public IReadOnlyDictionary<string,object> Query { get; private set; }
+
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
+			this.Query = new Dictionary<string, object> ();
 		}
 
 		/// <summary>
