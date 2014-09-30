@@ -35,20 +35,25 @@ namespace SocketServer
 				}
 
 				string str = Encoding.UTF8.GetString (client.Buffer, 0, len);
-				HTTPRequest req = null;
+
 				var res = new HTTPResponse (client);
-				req = new HTTPRequest ();
+				var req = new HTTPRequest ();
+
 				try {
 					req.ParseRequest(str);
-				} catch (HttpRequestException e) {
-					res.Send(e.StatusCode, "Illegal request");
+				} catch (HTTPException e) {
+					res.Send(e.StatusCode, e.Message);
 				}
 
 				try {
 					this.Middleware.Run (req, res);
+				} catch (HTTPException e) {
+					res.Send(e.StatusCode, e.Message);
 				} catch (Exception e) {
 					res.Send (500);
-				}
+				} 
+
+
 				if (!res.IsFinished) {
 					res.Send (404, "Not Found");
 				}

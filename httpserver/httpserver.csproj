@@ -54,6 +54,7 @@
     <Compile Include="Middleware\Logger.cs" />
     <Compile Include="HTTP\HeaderCollection.cs" />
     <Compile Include="Middleware\Router.cs" />
+    <Compile Include="HTTP\HTTPException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

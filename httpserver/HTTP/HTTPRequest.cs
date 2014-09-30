@@ -5,10 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 namespace SocketServer
 {
-	public class HttpRequestException : Exception {
-		public int StatusCode { get; set; }
-		public string StatusText { get; set; }
-	}
 
 	public class HTTPRequest
 	{
@@ -16,6 +12,7 @@ namespace SocketServer
 		public Double Version { get; private set; }
 		public string Protocol { get; private set; }
 		public string Method { get; private set; }
+
 		public string Path { get; private set; }
 
 		public HeaderCollection Headers { get; private set; }
@@ -39,7 +36,7 @@ namespace SocketServer
 
 			var match = Regex.Match (request, r);
 			if (!match.Success) {
-				throw new HttpRequestException { StatusCode = 400 };
+				throw new HTTPException { StatusCode = 400 };
 			}
 
 			var split = Regex.Split (request, "\r\n\r\n");
@@ -71,10 +68,12 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
-			var qi = this.Path.LastIndexOf ("?");
-			if (qi > 0) {
+			 
+			if (this.Path.LastIndexOf ("?") > 0) {
+
 				split = this.Path.Split('?');
 				var q = Uri.UnescapeDataString ("?" + split [1]);
+
 				this.Path = split [0];
 				this.Query = Utils.ParseQueryString (q);
 			}

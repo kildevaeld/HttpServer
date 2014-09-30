@@ -10,6 +10,10 @@ namespace SocketServer
 		void Execute(HTTPRequest request, HTTPResponse response);
 	}
 
+	/// <summary>
+	///  A middleware is a method execute in sekvens on every client request.
+	///  
+	/// </summary>
 	public class Middleware
 	{
 		private IList<MiddlewareHandler> _handlers;
