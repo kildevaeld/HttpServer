@@ -6,6 +6,9 @@ using System.Collections.Generic;
 namespace SocketServer
 {
 
+	public enum Methods {Get, Post, Put, Delete }
+
+
 	public class HTTPRequest
 	{
 		#region Properties
@@ -26,7 +29,7 @@ namespace SocketServer
 		/// HTTP Method
 		/// </summary>
 		/// <value>The method.</value>
-		public string Method { get; private set; }
+		public Methods Method { get; private set; }
 
 		/// <summary>
 		/// The request path
@@ -92,8 +95,23 @@ namespace SocketServer
 				this.ParseHeaders (headers);
 			}
 
+			Methods type = Methods.Get;
+			switch (match.Groups [1].Value) {
+			case "GET":
+				type = Methods.Get;
+				break;
+			case "POST":
+				type = Methods.Post;
+				break;
+			case "PUT":
+				type = Methods.Put;
+				break;
+			case "DELETE":
+				type = Methods.Delete;
+				break;
+			}
 
-			this.Method = match.Groups[1].Value;
+			this.Method = type;
 
 			// Is there a body
 			if (split.Count() == 2)
@@ -124,7 +142,8 @@ namespace SocketServer
 				if (header.Length - index <= 0)
 					continue;
 
-				Headers [h] = header.Substring (index, header.Length - index);
+				Headers [h] = header.Substring (index, header.Length - index)
+					.TrimStart(':',' ');
 			}
 
 			var userAgent = Headers ["User-Agent"];

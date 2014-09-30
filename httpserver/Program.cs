@@ -22,6 +22,10 @@ namespace httpserver
 				response.Send("Hello, World! - From " + request.Path);
 			});
 
+			router.Post ("/test", delegate(HTTPRequest request, HTTPResponse response) {
+				response.Send("Post test");
+			});
+
 			var server = new Server { Handler = handler };
 
 			server.Listen (8080);

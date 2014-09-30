@@ -5,7 +5,7 @@ using System.Linq;
 namespace SocketServer.Middlewares
 {
 
-	public enum Methods {Get, Post, Put, Delete }
+
 
 	public class Route () {
 		public string Path;
@@ -33,12 +33,18 @@ namespace SocketServer.Middlewares
 			var handler = list.Last ();
 			this.Route (Methods.Get, path, list.GetRange(1,list.Count - 1), handler);
 		}
+
+		public void Post(string path, params MiddlewareHandler[] handlers) {	
+			var list = handlers.ToList ();
+			var handler = list.Last ();
+			this.Route (Methods.Post, path, list.GetRange(1,list.Count - 1), handler);
+		}
 			
 
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 
 			foreach (var route in _stack) {
-				if (!route.Match (request.Path))
+				if (!route.Match (request.Path) || route.Method != request.Method)
 					continue;
 					
 				if (route.Middleware.Count > 0) {

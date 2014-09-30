@@ -28,7 +28,7 @@ namespace Test
 
 			_request.ParseRequest ("GET /file.txt HTTP/1.0");
 			Assert.AreEqual(_request.Path, "/file.txt");
-			Assert.AreEqual (_request.Method, "GET");
+			Assert.AreEqual (_request.Method, Methods.Get);
 			Assert.AreEqual(_request.Protocol, "HTTP");
 			Assert.AreEqual (_request.Version, 1.0);
 
@@ -70,38 +70,40 @@ namespace Test
 		}
 
 		[Test]
-		public void TestMethodNotImplemented()
+		public void TestPost()
 		{
-			//String line = GetFirstLine("POST /file.txt HTTP/1.0");
-			//Assert.AreEqual("HTTP/1.0 200 xxx", line);
+			_request.ParseRequest ("POST /file.txt HTTP/1.0");
+			Assert.AreEqual(_request.Path, "/file.txt");
+			Assert.AreEqual (_request.Method, Methods.Post);
+			Assert.AreEqual(_request.Protocol, "HTTP");
+			Assert.AreEqual (_request.Version, 1.0);
 		}
 
-		/// <summary>
-		/// Private helper method
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		private static String GetFirstLine(String request)
-		{
-			TcpClient client = new TcpClient("127.0.0.1", 8080);
+		[Test]
+		public void TestHeaders() {
+			_request.ParseRequest("POST / HTTP/1.0\r\nContent-Type: application/json\r\nContent-Length: 100\r\n\r\n");
 
-			NetworkStream networkStream = client.GetStream();
+			Assert.AreEqual(_request.Headers["Content-Type"],"application/json");
+			Assert.AreEqual(_request.Headers["Content-Length"], "100");
+		}
 
-			StreamWriter toServer = new StreamWriter(networkStream, Encoding.UTF8);
+		[Test]
+		public void TestBody() {
+		
+			_request.ParseRequest("POST / HTTP/1.0\r\n\r\n" +
+				"Hello, World!");
+				
+			Assert.AreEqual ("Hello, World!", _request.Body);
+		}
 
-			toServer.Write(request + CrLf);
-			toServer.Write(CrLf);
-			toServer.Flush();
+		[Test]
+		public void TestFull() {
+			_request.ParseRequest("POST / HTTP/1.0\r\nContent-Type: application/json" +
+				"\r\nContent-Length: 100\r\n\r\nHello, World!");
 
-
-			StreamReader fromServer = new StreamReader(networkStream);
-			String firstline = fromServer.ReadLine();
-			toServer.Close();
-			fromServer.Close();
-			client.Close();
-			return firstline;
-
-
+			Assert.AreEqual(_request.Headers["Content-Type"],"application/json");
+			Assert.AreEqual(_request.Headers["Content-Length"], "100");
+			Assert.AreEqual ("Hello, World!", _request.Body);
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace SocketServer
 			ThreadPool.SetMinThreads (20, c);
 		}
 
+		// TODO: Does not handle request larger than 1024 bytes. Implement Reader as a streamer
 		public void Initialize (ISocketClient client)
 		{
 
