@@ -10,14 +10,15 @@ namespace httpserver
         static void Main(string[] args)
         {
 			var handler = new SocketHTTPHandler ();
+			var router = new Router ();
 
 			handler.Middleware.Use (new Logger());
 			handler.Middleware.Use (new Static ("/Users/rasmus"));
 
-			var router = new Router ();
+
 			handler.Middleware.Use (router);
 
-			router.Get("/test",delegate(HTTPRequest request, HTTPResponse response) {
+			router.Get("/", delegate(HTTPRequest request, HTTPResponse response) {
 				response.Send("Hello, World! - From " + request.Path);
 			});
 
