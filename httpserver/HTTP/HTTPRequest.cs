@@ -150,8 +150,7 @@ namespace SocketServer
 			}
 
 		}
-
-
+	
 		public override string ToString ()
 		{
 			var q = Utils.DictinaryToString ((IDictionary<string,object>)this.Query);
