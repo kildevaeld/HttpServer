@@ -7,8 +7,8 @@ namespace SocketServer.Middlewares
 	static class QueryExtension {
 
 		public static IReadOnlyDictionary<string,object> GetQuery (this HTTPRequest request) {
-			if (request.Query != null)
-				return Utils.ParseQueryString (request.Query);
+			if (request.QueryString != null)
+				return Utils.ParseQueryString (request.QueryString);
 
 			return null;
 		}

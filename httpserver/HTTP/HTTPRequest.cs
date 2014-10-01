@@ -62,50 +62,66 @@ namespace SocketServer
 		#endregion
 
 		// TODO public string Accept { get; private set; } 
-		public string Query { get; private set; }
+		public string QueryString { get; private set; }
 
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
-			this.Query = null;
 		}
 
-		/// <summary>
-		/// Parses the request string
-		/// </summary>
-		/// <param name="request">Request.</param>
-		// TODO: Should handle streams
-		public void ParseRequest(string request) {
-		
+		public void ParseRequest(Stream stream) {
 
-			ParseStatusLine (request);
+			int pos = 0;
+			string header = "";
+			using (var reader = new StreamReader (stream, Encoding.ASCII)) {
+				while (true) { 
+					var line = reader.ReadLine();
+					if (line == "")
+						break;
+					if (line == null)
+						continue;
+					switch (pos) {
+					case 0:
+						this.ParseStatusLine (line);
+						pos++;
+						break;
+					case 1:
+						header = header + line + "\r\n";
+						break;
+					}
 
-			var split = Regex.Split (request, "\r\n\r\n");
-		
-			var index = split [0].IndexOf ("\r\n");
-			// Is it fullform
-			if (index > 0) {
-				// Parse headers
-				string[] headers = Regex.Split(split [0].Substring (index, split [0].Length - index), "\r\n");
-				this.ParseHeaders (headers);
+					if (reader.EndOfStream)
+						break;
+				}
+
+				if (header.Length > 0) {
+					this.ParseHeaders (header);
+
+					// Only parse body, if there's a content-length
+					// TODO: Body should be parsed as raw bytes, as it could be binary data. 
+					// 		 multipart/form-data file upload cannot be done without.
+					//		 Cannot just use the underlying stream (network),
+					//       because the streamreader has read ahead.
+					var cl = this.Headers ["Content-Length"];
+					if (cl != null) {
+						var buffer = new char[Convert.ToInt32 (cl)];
+						var len = reader.Read (buffer, 0, buffer.Length);
+
+						this.Body = new String (buffer);
+					}
+				} else if (!reader.EndOfStream) {
+					throw new HTTPException (400, HttpStatusCodes.Get (400));
+				}
+
+
 			}
-				
-			// Is there a body
-			if (split.Count() == 2)
-				this.Body = split [1];
-			 
-			if (this.Path.LastIndexOf ("?") > 0) {
 
-				split = this.Path.Split('?');
-				var q = Uri.UnescapeDataString ("?" + split [1]);
 
-				this.Path = split [0];
-				this.Query = q;
-			}
 		}
 
+		// TODO: Implement this without regex.
+		internal int ParseStatusLine (string request) {
 
-		protected void ParseStatusLine (string request) {
-			var match = Regex.Match (request, Utils.StatusLine);
+			var match = Regex.Match (request, Utils.StatusLine,RegexOptions.Compiled);
 
 			if (!match.Success) {
 				throw new HTTPException (400, HttpStatusCodes.Get (400));
@@ -133,21 +149,34 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
+			// Check for query parameters
+			if (this.Path.LastIndexOf ("?") > 0) {
 
+				var split = this.Path.Split('?');
+				var q = Uri.UnescapeDataString ("?" + split [1]);
+
+				this.Path = split [0];
+				this.QueryString = q;
+			}
+
+			return match.Groups [0].Value.Length;
 		}
+		// TODO: Clean parseHeaders method
+		protected int ParseHeaders (string headers) {
+			var sb = new StringBuilder ();
 
-		protected void ParseHeaders (string[] headers) {
+			int len = 0;
+			for (var i = 0; i < headers.Length; i++, len++) {
+				if (headers [i] == '\r' && headers [i + 1] == '\n') {
+					var h = sb.ToString ();
+					var k = h.Substring (0, h.IndexOf (":")).TrimStart('\n');
+					Headers [k] = h.Substring (k.Length + 1, h.Length - k.Length - 1).Trim(' ',':');
+					sb.Clear ();
 
-			foreach (var header in headers) {
-				if (string.IsNullOrEmpty (header))
-					continue;
-				var index = header.IndexOf(":");
-				var h = header.Substring (0, index);
-				if (header.Length - index <= 0)
-					continue;
+				} else {
+					sb.Append (headers [i]);
+				}
 
-				Headers [h] = header.Substring (index, header.Length - index)
-					.TrimStart(':',' ');
 			}
 
 			var userAgent = Headers ["User-Agent"];
@@ -155,12 +184,13 @@ namespace SocketServer
 				this.UserAgent = userAgent;	
 			}
 
+			return len;
+
 		}
 	
 		public override string ToString ()
 		{
-			var q = this.Query;
-			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, q);
+			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, QueryString);
 		}
 	}
 }

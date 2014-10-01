@@ -3,8 +3,15 @@ using SocketServer;
 
 namespace SocketServer.Middlewares.Multipart {
 
-	public class Json {
+	public class Json : IMiddelware {
 
+		public void Execute(HTTPRequest request, HTTPResponse response) {
+			var contentType = request.Headers ["Content-Type"];
+			if (contentType == null || contentType != MimeType.Get("json"))
+				return; // Nothing to parse.
+
+
+		}
 	}
 
 	public class FormData : IMiddelware {
