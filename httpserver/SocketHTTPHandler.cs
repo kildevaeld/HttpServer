@@ -6,7 +6,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using SocketServer.Middlewares;
-
+using System.Net.Sockets;
 namespace SocketServer
 {
 	public class SocketHTTPHandler : ISocketServerHandler 
@@ -33,32 +33,30 @@ namespace SocketServer
 
 				client = (ISocketClient)cli;
 
-				int len = client.Read();
+				var req = new HTTPRequest();
+				var res = new HTTPResponse (client);
 
-				if (len == 0) {
-					client.Close();
-					return;
+				using (var stream = new NetworkStream(client.Socket, false)) {
+					req.ParseRequest(stream);
 				}
 
-				string str = Encoding.UTF8.GetString(client.Buffer,0, len);
 
-				var res = new HTTPResponse (client);
-				var req = new HTTPRequest ();
+				//string str = Encoding.UTF8.GetString(client.Buffer,0, len);
 
-				try {
+
+
+				/*try {
 					req.ParseRequest(str);
 				} catch (HTTPException e) {
 					res.Send(e.StatusCode, e.Message);
-				}
+				}*/
 
 
 				try {
 					this.Middleware.Run (req, res);
 				} catch (HTTPException e) {
 					res.Send(e.StatusCode, e.Message);
-				}/* catch (Exception e) {
-					res.Send (500,e.StackTrace);
-				} */
+				}
 
 
 				if (!res.IsFinished) {

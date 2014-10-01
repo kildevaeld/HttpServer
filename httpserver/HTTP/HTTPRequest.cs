@@ -69,11 +69,38 @@ namespace SocketServer
 			this.Query = null;
 		}
 
+		public void ParseRequest(NetworkStream stream) {
+			//var reader = new StreamReader (stream,Encoding.UTF8);
+			int pos = 0;
+			string header = "";
+			using (var reader = new StreamReader(stream, Encoding.UTF8)) {
+				while (true) { 
+					var line = reader.ReadLine();
+					if (line == "")
+						break;
+					if (line == null)
+						continue;
+					switch (pos) {
+					case 0:
+						this.ParseStatusLine (line);
+						pos++;
+						break;
+					case 1:
+						header = header + line + "\r\n";
+						break;
+					}
+				}
+				if (header.Length > 0)
+					this.ParseHeaders (header);
+				//this.Body = reader.ReadToEnd ();
+			}
+		
+		}
+
 		/// <summary>
 		/// Parses the request string
 		/// </summary>
 		/// <param name="request">Request.</param>
-
 		public void ParseRequest(string request) {
 			int len = request.Length;
 			int sLen = ParseStatusLine (request);
@@ -110,6 +137,7 @@ namespace SocketServer
 
 		// TODO: Implement this without regex.
 		protected int ParseStatusLine (string request) {
+
 			var match = Regex.Match (request, Utils.StatusLine,RegexOptions.Compiled);
 
 			if (!match.Success) {
