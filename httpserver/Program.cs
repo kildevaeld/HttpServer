@@ -14,7 +14,7 @@ namespace httpserver
 
 			handler.Middleware.Use (new Json ());
 			handler.Middleware.Use(new Html("/Users/rasmus/Sites/"));
-			handler.Middleware.Use (new Logger());
+			handler.Middleware.Use (new SocketServer.Middlewares.Logger());
 			handler.Middleware.Use (new Static ("/Users/rasmus"));
 			handler.Middleware.Use (new FormData ());
 			handler.Middleware.Use (router);

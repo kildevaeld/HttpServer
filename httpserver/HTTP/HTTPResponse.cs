@@ -109,7 +109,7 @@ namespace SocketServer
 			SendHeaders ();
 
 			using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				using (NetworkStream ns = _client.GetStream ()) {
+				using (NetworkStream ns = _client.GetStream (false)) {
 					if (ns.CanWrite) {
 						try {
 							stream.CopyTo (ns);
