@@ -73,42 +73,42 @@ namespace SocketServer
 		/// Parses the request string
 		/// </summary>
 		/// <param name="request">Request.</param>
-		// TODO: Should handle streams
+
 		public void ParseRequest(string request) {
-		
-			int index = ParseStatusLine (request);
+			int len = request.Length;
+			int sLen = ParseStatusLine (request);
 
-			int i = 0, len = index;
+			int i = 0, hLen = sLen;
 
-			while (i < 3) {
-				if (request [len] == '\n' || request [len] == '\r')
+			// Read until first sequence of CRLFCRLF
+			while (i < 3 && hLen < request.Length ) {
+				if (request [hLen] == '\n' || request [hLen] == '\r')
 					i++;
 				else i = 0;
-				len++;
+				hLen++;
 			}
 
-			if (len > index) {
-				string headers = request.Substring (index, len - index).Trim('\r','\n');
+			if (hLen > sLen) {
+				// Full form
+				string headers = request.Substring (sLen, hLen - sLen).Trim('\r','\n');
 				this.ParseHeaders (headers);
+
+				string contentLength = this.Headers["Content-Length"];
+				// Do not parse body if there's no content-length
+
+				if (contentLength == null) {
+					return;
+				}
+
+				if (len > hLen + sLen) {
+					var cLen = Convert.ToInt32 (contentLength);
+					var r = len - hLen + sLen;
+					this.Body = request.Substring (hLen + sLen, cLen);
+				}
 			}
-
-		
-			/*	
-			// Is there a body
-			if (split.Count() == 2)
-				this.Body = split [1];
-			 
-			if (this.Path.LastIndexOf ("?") > 0) {
-
-				split = this.Path.Split('?');
-				var q = Uri.UnescapeDataString ("?" + split [1]);
-
-				this.Path = split [0];
-				this.Query = q;
-			}*/
 		}
 
-
+		// TODO: Implement this without regex.
 		protected int ParseStatusLine (string request) {
 			var match = Regex.Match (request, Utils.StatusLine,RegexOptions.Compiled);
 
@@ -138,28 +138,42 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
+			// Check for query parameters
+			if (this.Path.LastIndexOf ("?") > 0) {
+
+				var split = this.Path.Split('?');
+				var q = Uri.UnescapeDataString ("?" + split [1]);
+
+				this.Path = split [0];
+				this.Query = q;
+			}
+
 			return match.Groups [0].Value.Length;
 		}
 
-		protected void ParseHeaders (string headers) {
+		protected int ParseHeaders (string headers) {
 			var sb = new StringBuilder ();
 
-		
-			for (var i = 0; i < headers.Length; i++) {
+			int len = 0;
+			for (var i = 0; i < headers.Length; i++, len++) {
 				if (headers [i] == '\r' && headers [i + 1] == '\n') {
 					var h = sb.ToString ();
-					var k = sb.ToString ().Substring (0, h.IndexOf (":"));
-					Headers [k] = h.Substring (k.Length + 1, h.Length - k.Length - 1).Trim();
+					var k = h.Substring (0, h.IndexOf (":")).TrimStart('\n');
+					Headers [k] = h.Substring (k.Length + 1, h.Length - k.Length - 1).Trim(' ',':');
 					sb.Clear ();
+					len--;
 				} else {
 					sb.Append (headers [i]);
 				}
+
 			}
 
 			var userAgent = Headers ["User-Agent"];
 			if (userAgent != null) {
 				this.UserAgent = userAgent;	
 			}
+
+			return len;
 
 		}
 	
