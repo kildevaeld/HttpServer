@@ -76,19 +76,24 @@ namespace SocketServer
 		// TODO: Should handle streams
 		public void ParseRequest(string request) {
 		
+			int index = ParseStatusLine (request);
 
-			ParseStatusLine (request);
+			int i = 0, len = index;
 
-			var split = Regex.Split (request, "\r\n\r\n");
-		
-			var index = split [0].IndexOf ("\r\n");
-			// Is it fullform
-			if (index > 0) {
-				// Parse headers
-				string[] headers = Regex.Split(split [0].Substring (index, split [0].Length - index), "\r\n");
+			while (i < 3) {
+				if (request [len] == '\n' || request [len] == '\r')
+					i++;
+				else i = 0;
+				len++;
+			}
+
+			if (len > index) {
+				string headers = request.Substring (index, len - index).Trim('\r','\n');
 				this.ParseHeaders (headers);
 			}
-				
+
+		
+			/*	
 			// Is there a body
 			if (split.Count() == 2)
 				this.Body = split [1];
@@ -100,12 +105,12 @@ namespace SocketServer
 
 				this.Path = split [0];
 				this.Query = q;
-			}
+			}*/
 		}
 
 
-		protected void ParseStatusLine (string request) {
-			var match = Regex.Match (request, Utils.StatusLine);
+		protected int ParseStatusLine (string request) {
+			var match = Regex.Match (request, Utils.StatusLine,RegexOptions.Compiled);
 
 			if (!match.Success) {
 				throw new HTTPException (400, HttpStatusCodes.Get (400));
@@ -133,21 +138,22 @@ namespace SocketServer
 			this.Protocol = match.Groups [3].Value;
 			this.Path = match.Groups [2].Value;
 
-
+			return match.Groups [0].Value.Length;
 		}
 
-		protected void ParseHeaders (string[] headers) {
+		protected void ParseHeaders (string headers) {
+			var sb = new StringBuilder ();
 
-			foreach (var header in headers) {
-				if (string.IsNullOrEmpty (header))
-					continue;
-				var index = header.IndexOf(":");
-				var h = header.Substring (0, index);
-				if (header.Length - index <= 0)
-					continue;
-
-				Headers [h] = header.Substring (index, header.Length - index)
-					.TrimStart(':',' ');
+		
+			for (var i = 0; i < headers.Length; i++) {
+				if (headers [i] == '\r' && headers [i + 1] == '\n') {
+					var h = sb.ToString ();
+					var k = sb.ToString ().Substring (0, h.IndexOf (":"));
+					Headers [k] = h.Substring (k.Length + 1, h.Length - k.Length - 1).Trim();
+					sb.Clear ();
+				} else {
+					sb.Append (headers [i]);
+				}
 			}
 
 			var userAgent = Headers ["User-Agent"];
