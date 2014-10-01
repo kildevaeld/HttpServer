@@ -72,7 +72,6 @@ namespace SocketServer
 
 			int pos = 0;
 			string header = "";
-
 			using (var reader = new StreamReader (stream, Encoding.ASCII)) {
 				while (true) { 
 					var line = reader.ReadLine();
@@ -118,44 +117,6 @@ namespace SocketServer
 
 
 		}
-	
-		/// <summary>
-		/// Parses the request string
-		/// </summary>
-		/// <param name="request">Request.</param>
-		/*public void ParseRequest(string request) {
-			int len = request.Length;
-			int sLen = ParseStatusLine (request);
-
-			int i = 0, hLen = sLen;
-
-			// Read until first sequence of CRLFCRLF
-			while (i < 4 && hLen < request.Length ) {
-				if (request [hLen] == '\n' || request [hLen] == '\r')
-					i++;
-				else i = 0;
-				hLen++;
-			}
-
-			if (hLen > sLen) {
-				// Full form
-				string headers = request.Substring (sLen, hLen - sLen).Trim('\r','\n');
-				this.ParseHeaders (headers);
-
-				string contentLength = this.Headers["Content-Length"];
-				// Do not parse body if there's no content-length
-
-				if (contentLength == null) {
-					return;
-				}
-
-				if (len > hLen + sLen) {
-					var cLen = Convert.ToInt32 (contentLength);
-					var r = len - hLen + sLen;
-					this.Body = request.Substring (hLen, cLen);
-				}
-			}
-		}*/
 
 		// TODO: Implement this without regex.
 		internal int ParseStatusLine (string request) {
@@ -200,7 +161,7 @@ namespace SocketServer
 
 			return match.Groups [0].Value.Length;
 		}
-
+		// TODO: Clean parseHeaders method
 		protected int ParseHeaders (string headers) {
 			var sb = new StringBuilder ();
 
