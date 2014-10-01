@@ -12,6 +12,7 @@ namespace httpserver
 			var handler = new SocketHTTPHandler ();
 			var router = new Router ();
 
+			handler.Middleware.Use (new Json ());
 			handler.Middleware.Use(new Html("/Users/rasmus/Sites/"));
 			handler.Middleware.Use (new Logger());
 			handler.Middleware.Use (new Static ("/Users/rasmus"));

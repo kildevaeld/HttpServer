@@ -62,18 +62,18 @@ namespace SocketServer
 		#endregion
 
 		// TODO public string Accept { get; private set; } 
-		public string Query { get; private set; }
+		public string QueryString { get; private set; }
 
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
-			this.Query = null;
 		}
 
-		public void ParseRequest(NetworkStream stream) {
-			//var reader = new StreamReader (stream,Encoding.UTF8);
+		public void ParseRequest(Stream stream) {
+
 			int pos = 0;
 			string header = "";
-			using (var reader = new StreamReader(stream, Encoding.UTF8)) {
+
+			using (var reader = new StreamReader (stream, Encoding.ASCII)) {
 				while (true) { 
 					var line = reader.ReadLine();
 					if (line == "")
@@ -89,26 +89,48 @@ namespace SocketServer
 						header = header + line + "\r\n";
 						break;
 					}
-				}
-				if (header.Length > 0)
-					this.ParseHeaders (header);
-				//this.Body = reader.ReadToEnd ();
-			}
-		
-		}
 
+					if (reader.EndOfStream)
+						break;
+				}
+
+				if (header.Length > 0) {
+					this.ParseHeaders (header);
+
+					// Only parse body, if there's a content-length
+					// TODO: Body should be parsed as raw bytes, as it could be binary data. 
+					// 		 multipart/form-data file upload cannot be done without.
+					//		 Cannot just use the underlying stream (network),
+					//       because the streamreader has read ahead.
+					var cl = this.Headers ["Content-Length"];
+					if (cl != null) {
+						var buffer = new char[Convert.ToInt32 (cl)];
+						var len = reader.Read (buffer, 0, buffer.Length);
+
+						this.Body = new String (buffer);
+					}
+				} else if (!reader.EndOfStream) {
+					throw new HTTPException (400, HttpStatusCodes.Get (400));
+				}
+
+
+			}
+
+
+		}
+	
 		/// <summary>
 		/// Parses the request string
 		/// </summary>
 		/// <param name="request">Request.</param>
-		public void ParseRequest(string request) {
+		/*public void ParseRequest(string request) {
 			int len = request.Length;
 			int sLen = ParseStatusLine (request);
 
 			int i = 0, hLen = sLen;
 
 			// Read until first sequence of CRLFCRLF
-			while (i < 3 && hLen < request.Length ) {
+			while (i < 4 && hLen < request.Length ) {
 				if (request [hLen] == '\n' || request [hLen] == '\r')
 					i++;
 				else i = 0;
@@ -130,13 +152,13 @@ namespace SocketServer
 				if (len > hLen + sLen) {
 					var cLen = Convert.ToInt32 (contentLength);
 					var r = len - hLen + sLen;
-					this.Body = request.Substring (hLen + sLen, cLen);
+					this.Body = request.Substring (hLen, cLen);
 				}
 			}
-		}
+		}*/
 
 		// TODO: Implement this without regex.
-		protected int ParseStatusLine (string request) {
+		internal int ParseStatusLine (string request) {
 
 			var match = Regex.Match (request, Utils.StatusLine,RegexOptions.Compiled);
 
@@ -173,7 +195,7 @@ namespace SocketServer
 				var q = Uri.UnescapeDataString ("?" + split [1]);
 
 				this.Path = split [0];
-				this.Query = q;
+				this.QueryString = q;
 			}
 
 			return match.Groups [0].Value.Length;
@@ -189,7 +211,7 @@ namespace SocketServer
 					var k = h.Substring (0, h.IndexOf (":")).TrimStart('\n');
 					Headers [k] = h.Substring (k.Length + 1, h.Length - k.Length - 1).Trim(' ',':');
 					sb.Clear ();
-					len--;
+
 				} else {
 					sb.Append (headers [i]);
 				}
@@ -207,8 +229,7 @@ namespace SocketServer
 	
 		public override string ToString ()
 		{
-			var q = this.Query;
-			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, q);
+			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, QueryString);
 		}
 	}
 }

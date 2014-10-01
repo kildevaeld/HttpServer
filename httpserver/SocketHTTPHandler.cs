@@ -33,29 +33,21 @@ namespace SocketServer
 
 				client = (ISocketClient)cli;
 
+				// First off, validate the request
 				var req = new HTTPRequest();
 				var res = new HTTPResponse (client);
 
 				using (var stream = new NetworkStream(client.Socket, false)) {
 					req.ParseRequest(stream);
 				}
-
-
-				//string str = Encoding.UTF8.GetString(client.Buffer,0, len);
-
-
-
-				/*try {
-					req.ParseRequest(str);
-				} catch (HTTPException e) {
-					res.Send(e.StatusCode, e.Message);
-				}*/
-
-
+			
+				// Run middleware
 				try {
 					this.Middleware.Run (req, res);
 				} catch (HTTPException e) {
 					res.Send(e.StatusCode, e.Message);
+				} catch (SocketException e) {
+
 				}
 
 
