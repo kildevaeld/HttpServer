@@ -45,7 +45,7 @@ namespace SocketServer
 				paramaters;
 		}
 
-		public static string DictinaryToString(IDictionary<string, object> dict) {
+		public static string DictinaryToString(IDictionary<string, object> dict, bool pretty = true) {
 			string[] o = new string[dict.Count];
 
 			var i = 0;
@@ -59,16 +59,17 @@ namespace SocketServer
 						v [z] = Convert.ToString(e.GetValue (z));
 					} 
 
-					o [i] = kv.Key + " : [" + String.Join (",", v) + ']'; 
+					o [i] = kv.Key + " : [\n\t" + String.Join (",\n\t", v) + "\n]"; 
 				
 				} else {
 					o [i] = kv.Key + " : " + kv.Value;
 				}
 				i++;
 			}
-			return string.Join(",",o);
+			return string.Join(",\n",o);
 
 		}
+			
 	}
 
 

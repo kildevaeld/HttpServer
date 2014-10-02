@@ -4,16 +4,43 @@ using SocketServer;
 using SocketServer.Middlewares;
 using CommandLine;
 using System.IO;
-
+using System.Collections.Generic;
 
 namespace Example
 {
+	// Extension for HTTPREQuest
+	static class QueryExtension {
+
+		// Jeg ved ikke om det er en fejl i mono eller, men jeg ka' ikke bruge extensions methods
+		// defineret i HttpServer herfra... hmmm...
+		public static IReadOnlyDictionary<string,object> Query (this HTTPRequest request) {
+			if (request.QueryString != null)
+				return Utils.ParseQueryString (request.QueryString);
+
+			return null;
+		}
+
+		public static object GetQuery(this HTTPRequest request, string prop) {
+			if (request.QueryString == null)
+				return null;
+
+			var query = Utils.ParseQueryString (request.QueryString);
+			if (query.ContainsKey (prop))
+				return query [prop];
+			return null;
+		}
+
+	}
+
 	class MainClass
 	{
+
+
+
 		public static void Main (string[] args)
 		{
 			var options = new Options ();
-
+	
 			if (CommandLine.Parser.Default.ParseArguments (args, options)) {
 
 				if (options.ConfigFile != null) {
@@ -64,7 +91,7 @@ namespace Example
 			// Alle request som ikke er blevet fanget eller behandlet
 			// Ska' som default være html
 			server.Use ((HTTPRequest request, HTTPResponse response) => {
-				response.Headers["Content-Type"] = "text/html";
+				response.Headers["Content-Type"] = "text/html; charset=utf-8";
 			});
 
 			server.Get("/router", (HTTPRequest request, HTTPResponse response) => {
@@ -74,7 +101,17 @@ namespace Example
 			// Dette link smider en Exception som bliver fanget af error handleren
 			server.Get("/errorenos-link", (HTTPRequest request, HTTPResponse response) => {
 				//throw new HTTPException(500);
-				throw new Exception("A terrible error!");
+				throw new HTTPException("A terrible error!");
+			});
+
+			server.Use( 
+				(HTTPRequest request, HTTPResponse response) => {
+				var query = request.Query();
+				
+				if (query != null) {
+					var str = "<pre>" + Utils.DictinaryToString((IDictionary<string,object>)query) + "</pre>";
+					response.Send(200, str);
+				}
 			});
 
 			// Handle not found!

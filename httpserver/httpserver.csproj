@@ -47,12 +47,12 @@
     <Compile Include="Middleware\Logger.cs" />
     <Compile Include="Middleware\Middleware.cs" />
     <Compile Include="Middleware\Multipart.cs" />
-    <Compile Include="Middleware\Query.cs" />
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Middleware\Static.cs" />
     <Compile Include="HttpHandler\HttpHandler.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Middleware\Favicon.cs" />
+    <Compile Include="Middleware\Query.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
