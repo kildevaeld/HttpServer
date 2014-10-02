@@ -68,6 +68,9 @@ namespace SocketServer
 			this.Headers = new HeaderCollection ();
 		}
 
+
+
+		#region Parsing
 		public void ParseRequest(Stream stream) {
 
 			int pos = 0;
@@ -187,6 +190,8 @@ namespace SocketServer
 			return len;
 
 		}
+
+		#endregion
 	
 		public override string ToString ()
 		{

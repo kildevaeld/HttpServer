@@ -2,6 +2,8 @@
 using Http;
 using SocketServer;
 using SocketServer.Middlewares;
+using SocketServer.Middlewares.Multipart;
+
 using CommandLine;
 using System.IO;
 using System.Collections.Generic;
@@ -85,6 +87,7 @@ namespace Example
 				server.Use (new Favicon { Path = Path.Combine(options.Root, "favicon.ico")});
 				server.Use (new Static (options.Root));
 				server.Use (new Html (options.Root));
+				server.Use (new Json ());
 
 			}
 
@@ -103,16 +106,14 @@ namespace Example
 				//throw new HTTPException(500);
 				throw new HTTPException("A terrible error!");
 			});
-
-			server.Use( 
-				(HTTPRequest request, HTTPResponse response) => {
-				var query = request.Query();
 				
-				if (query != null) {
-					var str = "<pre>" + Utils.DictinaryToString((IDictionary<string,object>)query) + "</pre>";
-					response.Send(200, str);
-				}
-			});
+
+			server.Get ("/query-test", Routes.QueryTest);
+			server.Post ("/post", Routes.JSONTest);
+
+			server.Match<MatchTest> ("/match-test", "index" );
+
+
 
 			// Handle not found!
 			// Dette er den sidste i rækken er middlewares. Hvis requestet ikke er blevet fanget eller
