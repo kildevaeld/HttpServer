@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
 	// Extension for HTTPREQuest
-	static class QueryExtension {
+	public static class QueryExtension {
 
 		public static IReadOnlyDictionary<string,object> Query (this HTTPRequest request) {
 			if (request.QueryString != null)
@@ -25,7 +25,7 @@ namespace SocketServer.Middlewares
 
 	}
 
-	public class Query : IMiddelware
+	public class Query : IMiddelwareHandler
 	{
 		public Query ()
 		{

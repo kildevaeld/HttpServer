@@ -1,8 +1,8 @@
 ﻿using System;
-using SocketServer;
+using HttpServer;
 using Newtonsoft.Json;
 
-namespace SocketServer.Middlewares.Multipart {
+namespace HttpServer.Middleware {
 
 	public static class MultipartExtension {
 		public static T GetJSON<T>(this HTTPRequest request) {
@@ -15,7 +15,7 @@ namespace SocketServer.Middlewares.Multipart {
 
 	}
 
-	public class Json : IMiddelware {
+	public class Json : IMiddelwareHandler {
 
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 			var contentType = request.Headers ["Content-Type"];
@@ -29,7 +29,7 @@ namespace SocketServer.Middlewares.Multipart {
 		}
 	}
 
-	public class FormData : IMiddelware {
+	public class FormData : IMiddelwareHandler {
 			
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 			/*var contentType = (string)request.Headers ["Content-Type"];

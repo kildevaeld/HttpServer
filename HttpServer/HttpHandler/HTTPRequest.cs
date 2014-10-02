@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace SocketServer
+namespace HttpServer
 {
 
 	public enum Methods {Get, Post, Put, Delete }
@@ -59,10 +60,11 @@ namespace SocketServer
 		/// </summary>
 		/// <value>The body.</value>
 		public string Body { get; private set; }
-		#endregion
+
 
 		// TODO public string Accept { get; private set; } 
 		public string QueryString { get; private set; }
+		#endregion
 
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
@@ -108,14 +110,18 @@ namespace SocketServer
 					if (cl != null) {
 						var buffer = new char[Convert.ToInt32 (cl)];
 						var len = reader.Read (buffer, 0, buffer.Length);
-
 						this.Body = new String (buffer);
 					}
+
 				} else if (!reader.EndOfStream) {
+					var l = reader.ReadLine ();
+					// If it's noise, then just return
+					if (l == "" || l == null)
+						return;
+					// Body with no content-length... tsk tsk..
 					throw new HTTPException (400, HttpStatusCodes.Get (400));
 				}
-
-
+					
 			}
 
 

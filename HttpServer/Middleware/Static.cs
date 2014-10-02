@@ -2,9 +2,9 @@
 using System.IO;
 using System.Net.Mime;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
-	public class Static : IMiddelware
+	public class Static : IMiddelwareHandler
 	{
 
 		public string _rootPath; 

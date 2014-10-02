@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocketServer
+namespace HttpServer
 {
 	public static class HttpStatusCodes
 	{

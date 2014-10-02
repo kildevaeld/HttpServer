@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Net.Sockets;
+using HttpServer;
+using HttpServer.Middleware;
 using SocketServer;
-using SocketServer.Middlewares;
-
-namespace Http
+using SocketServer.Handlers;
+namespace HttpServer
 {
 	/// <summary>
 	/// A simple facade class for Socketserver with a http handler.
@@ -27,23 +28,24 @@ namespace Http
 		}
 
 		private void Initialize () {
+			// HACK:
 			this.Router = new Router ();
-			this.Server.Handler = this.Handler = new HttpHandler ();
-			this.Handler.Middleware.Use (this.Router);
+			this.Server.Handler = this.Handler = new HttpHandler (this.Router);
+
 		}
 
 
 		#region Middlewares	
 		public void Use(MiddlewareHandler handler) {
-			this.Handler.Middleware.Use (handler);
+			this.Router.Use (handler);
 		}
 
-		public void Use(IMiddelware middleware) {
-			this.Handler.Middleware.Use (middleware);
+		public void Use(IMiddelwareHandler middleware) {
+			this.Router.Use (middleware);
 		}
 
 		public void Use(MiddlewareErrorHandler handler) {
-			this.Handler.Middleware.Use (handler);
+			this.Router.Use (handler);
 		}
 		#endregion
 
@@ -56,17 +58,21 @@ namespace Http
 			this.Router.Post (path, handlers);
 		}
 
-		public void Put(string path, params MiddlewareErrorHandler[] handlers) {
+		public void Put(string path, params MiddlewareHandler[] handlers) {
+			this.Router.Put (path, handlers);
+		}
 
+		public void Delete(string path, params MiddlewareHandler[] handlers) {
+			this.Router.Delete (path, handlers);
 		}
 
 		public void Match<T> (string path, string action, Methods method = Methods.Get) {
 			this.Router.Match<T> (path, action, method);
 		}
-
 		#endregion
 
 		public void Listen (int port) {
+
 			this.Server.Listen (port);
 		}
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Text;
-namespace SocketServer
+namespace HttpServer
 {
 	public partial class HTTPResponse
 	{

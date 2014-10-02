@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Text;
-using SocketServer.Handlers;
+
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using SocketServer.Middlewares;
+using HttpServer.Middleware;
 using System.Net.Sockets;
-namespace SocketServer
+
+using SocketServer;
+using SocketServer.Handlers;
+
+namespace HttpServer
 {
 	public class HttpHandler : ISocketServerHandler 
 	{
-		public Middleware Middleware;
+		public IMiddleware Middleware;
 
-		public HttpHandler () 
+		public HttpHandler () : this(new Middleware.Middleware ())
 		{
-			Middleware = new Middleware ();
+
+
+		}
+
+		public HttpHandler (IMiddleware middleware)  
+		{
+			Middleware = middleware;
 
 			// Set threadpool
 			int w;
@@ -37,7 +47,11 @@ namespace SocketServer
 				var res = new HTTPResponse (client);
 
 				using (var stream = new NetworkStream(client.Socket, false)) {
-					req.ParseRequest(stream);
+					try {
+						req.ParseRequest(stream);
+					} catch (HTTPException e) {
+						res.Send(e.StatusCode, e.Message);
+					}
 				}
 			
 				// Run middleware

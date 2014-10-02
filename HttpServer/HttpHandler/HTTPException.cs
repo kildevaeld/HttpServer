@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SocketServer
+namespace HttpServer
 {
 	public class HTTPException : Exception
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
-using SocketServer;
-using SocketServer.Middlewares;
+using HttpServer;
+using HttpServer.Middlewares;
 using zlib;
 namespace Middlewares
 {

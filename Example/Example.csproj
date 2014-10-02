@@ -51,10 +51,6 @@
       <Project>{854863F2-8B56-4625-ACFF-8BE2B4E5732A}</Project>
       <Name>HttpServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SocketServer\SocketServer\SocketServer.csproj">
-      <Project>{95516852-FA6E-453C-9F60-790D0252B905}</Project>
-      <Name>SocketServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

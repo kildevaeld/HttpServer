@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
-	public class Favicon : IMiddelware
+	public class Favicon : IMiddelwareHandler
 	{
 
 		public string Path { get; set; }

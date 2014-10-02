@@ -2,17 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SocketServer
+namespace HttpServer
 {
+	/// <summary>
+	/// Header collection.
+	/// </summary>
 	public class HeaderCollection
 	{
 		private Dictionary<string,string> _headers;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HttpServer.HeaderCollection"/> class.
+		/// </summary>
 		public HeaderCollection ()
 		{
 			_headers = new Dictionary<string, string> ();
 		}
-			
+
+		/// <summary>
+		/// Gets or sets the <see cref="HttpServer.HeaderCollection"/> with the specified header.
+		/// </summary>
+		/// <param name="header">Header.</param>
 		public string this[string header] {
 			get { 
 				var lk = Sanitize(header);
@@ -46,6 +56,10 @@ namespace SocketServer
 			return String.Join("-", words);
 		} 
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="HttpServer.HeaderCollection"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="HttpServer.HeaderCollection"/>.</returns>
 		public override string ToString ()
 		{
 			var h = _headers.Select(x => string.Format("{0}: {1}\r\n",x.Key,x.Value));

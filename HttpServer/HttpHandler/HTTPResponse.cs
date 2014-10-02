@@ -6,13 +6,21 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SocketServer
+using SocketServer;
+namespace HttpServer
 {
+	/// <summary>
+	/// HTTP response event arguments.
+	/// </summary>
 	public class HTTPResponseEventArgs : EventArgs {
 		public HTTPResponse Response;
 	}
 
+	/// <summary>
+	/// HTTP response event.
+	/// </summary>
 	public delegate void HTTPResponseEvent(object sender, HTTPResponseEventArgs args);
+
 
 	public partial class HTTPResponse
 	{
@@ -20,19 +28,40 @@ namespace SocketServer
 		private bool _headerSent = false;
 		private ISocketClient _client;
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is finished.
+		/// </summary>
+		/// <value><c>true</c> if this instance is finished; otherwise, <c>false</c>.</value>
 		public bool IsFinished { get; private set; }
 
+		/// <summary>
+		/// Collection of response headers
+		/// </summary>
+		/// <value>The headers.</value>
 		// TODO: Create HeadersCollection class
 		public HeaderCollection Headers { get; private set; }
 
+		/// <summary>
+		/// Gets or sets the status code.
+		/// </summary>
+		/// <value>The status code.</value>
 		public int StatusCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the body.
+		/// </summary>
+		/// <value>The body.</value>
 		public string Body { get; set; }
 
-		// Events
+		/// <summary>
+		/// Occurs when finished.
+		/// </summary>
 		public event HTTPResponseEvent Finished;
 
-
+		/// <summary>
+		/// Initializes a new instance of the class.
+		/// </summary>
+		/// <param name="client">Client.</param>
 		public HTTPResponse (ISocketClient client) {
 			if (client == null)
 				throw new ArgumentException ("Client is required!");
@@ -63,6 +92,12 @@ namespace SocketServer
 			return this.Send (200, body);
 		}
 
+		/// <summary>
+		/// Sends the formated body .
+		/// </summary>
+		/// <returns>Number of bytes sent.</returns>
+		/// <param name="body">Body.</param>
+		/// <param name="args">Arguments.</param>
 		public int SendFormat(string body, params object[] args) {
 			return this.Send (200, string.Format (body, args));
 		}
@@ -82,7 +117,7 @@ namespace SocketServer
 			if (this.Body == null) {
 				this.Body = HttpStatusCodes.Get (this.StatusCode);
 			}
-
+			this.Headers ["Content-Length"] = this.Body.Length.ToString();
 			var ret = this.Write (this.ToString ());
 
 			this.End (); // Flag finished
@@ -154,6 +189,10 @@ namespace SocketServer
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="HttpServer.HTTPResponse"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="HttpServer.HTTPResponse"/>.</returns>
 		public override string ToString ()
 		{
 			var str = String.Format ("HTTP/1.0 {0}\r\n{1}\r\n{2}", StatusCode, Headers,Body);
