@@ -13,4 +13,31 @@ $(function () {
 		}
 	},1000);
 
+
+	$('#submit').click(function (e) {
+		e.preventDefault();
+		console.log($('[name]','form'));
+		var out = {}
+		$('[name]', 'form').each(function (i) {
+			
+			out[$(this).attr('name')] = $(this).val();
+		});
+
+		/*console.log(out);
+		$.post('/post-test',out,function (data) {
+			$('#json-result').text(data);
+		}, 'application/json')*/
+
+		$.ajax({
+			type: "POST",
+			url: '/post-test',
+			data: JSON.stringify(out),
+			dataType: 'json',
+			contentType: 'application/json'
+		}).done(function (data) {
+			$('#json-result .result').text(JSON.stringify(data, null, 4));
+		})
+		
+	})
+
 });

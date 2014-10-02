@@ -21,13 +21,13 @@ namespace HttpServer.Middleware
 		void Run (HTTPRequest request, HTTPResponse response);
 	}
 	/// <summary>
-	///  A middleware is a method execute in sekvens every client request.
+	///  A middleware is a method executed in sekvens every client request.
 	///  
 	/// </summary>
 	public class Middleware : IMiddleware
 	{
-		private IList<MiddlewareHandler> _handlers;
-		private IList<MiddlewareErrorHandler> _errorHandlers;
+		protected IList<MiddlewareHandler> _handlers;
+		protected IList<MiddlewareErrorHandler> _errorHandlers;
 
 		public Middleware ()
 		{

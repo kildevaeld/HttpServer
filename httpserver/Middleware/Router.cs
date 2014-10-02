@@ -5,14 +5,56 @@ using System.Reflection;
 
 namespace HttpServer.Middleware
 {
-
-	public class Route () {
+	/// <summary>
+	/// Represent a route
+	/// </summary>
+	public class Route : IMiddelwareHandler {
+		/// <summary>
+		/// The route path
+		/// </summary>
 		public string Path;
+		/// <summary>
+		/// The http method
+		/// </summary>
 		public Methods Method;
+		/// <summary>
+		/// The handler.
+		/// </summary>
 		public MiddlewareHandler Handler;
+		/// <summary>
+		/// The middleware.
+		/// </summary>
 		public IList<MiddlewareHandler> Middleware;
+		/// <summary>
+		/// Match the specified path.
+		/// </summary>
+		/// <param name="path">Path.</param>
 		public bool Match(string path) {
 			return path == Path;
+		}
+
+		/// <summary>
+		/// Execute the specified request and response.
+		/// </summary>
+		/// <param name="request">Request.</param>
+		/// <param name="response">Response.</param>
+		public void Execute(HTTPRequest request, HTTPResponse response) {
+			if (!Match (request.Path) || this.Method != request.Method)
+				return;
+			if (Middleware != null && Middleware.Count > 0) {
+				foreach (var m in Middleware) {
+					m (request, response);
+					if (response.IsFinished)
+						return;
+				}
+
+				if (response.IsFinished)
+					return;
+			}
+
+			Handler (request, response);
+			if (response.IsFinished)
+				return;
 		}
 	}
 
@@ -23,14 +65,7 @@ namespace HttpServer.Middleware
 	// TODO: Implement parametized routes: /api/:id
 	public class Router : Middleware, IMiddelwareHandler
 	{
-
-		protected IList<Route> _stack;
-
-		public Router ()
-		{
-			_stack = new List<Route>();
-		}
-
+	
 		/// <summary>
 		/// HTTP Get request
 		/// </summary>
@@ -109,43 +144,14 @@ namespace HttpServer.Middleware
 		/// <param name="request">Request.</param>
 		/// <param name="response">Response.</param>
 		public void Execute(HTTPRequest request, HTTPResponse response) {
-
-			foreach (var route in _stack) {
-				if (!route.Match (request.Path) || route.Method != request.Method)
-					continue;
-					
-				if (route.Middleware != null && route.Middleware.Count > 0) {
-					foreach (var m in route.Middleware) {
-						m (request, response);
-						if (response.IsFinished)
-							break;
-					}
-
-					if (response.IsFinished)
-						break;
-				}
-					
-				route.Handler (request, response);
-				if (response.IsFinished)
-					break;
-			}
-				
+			this.Run (request, response);
 		}
 
 		internal void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
 			var route = new Route { Method = method, Path = path, Handler = handler, Middleware = middleware };
-			_stack.Add (route);
+			this.Use (route);
 		}
-
-		public override void Run(HTTPRequest request, HTTPResponse response) {
-			base.Run (request, response);
-
-			if (response.IsFinished)
-				return;
-
-			this.Execute (request, response);
-		}
-
+			
 	}
 }
 

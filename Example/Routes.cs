@@ -19,7 +19,9 @@ namespace Example
 
 		public static void JSONTest(HTTPRequest request, HTTPResponse response) {
 			var json = request.GetJSON();
-			response.SendFormat("This is json {0}", json); 
+			response.Headers["content-type"] = "application/json";
+			response.Send(json.ToString()); 
+
 		}
 	}
 }

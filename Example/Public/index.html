@@ -26,6 +26,28 @@
         			<li> <a href="/error-test">This links throws an exception</a></li>
         		</ul>
         	</section>
+			<section class="row">
+				<div class="col-lg-4 col-md-4">
+					<h3>Post/Json Test</h3>
+					<form action="/post-test" method="post">
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input type="text" name="name" class="form-control"/>
+						</div>
+						<div class="form-group">
+							<label for="age">Age</label>
+							<input type="text" name="age" class="form-control" />
+						</div>
+						<button type="button" id="submit">Submit</button>
+					</form>
+				</div>
+				<div id="json-result">
+					<h3>Form responds</h3>
+					<pre>
+						<code class="result"></code>
+					</pre>
+				</div>
+			</section>
 			
 
         </div>
