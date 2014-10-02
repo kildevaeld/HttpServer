@@ -18,6 +18,7 @@ namespace HttpServer.Middleware
 
 	/// <summary>
 	/// Simple routing middleware.
+	/// Can be used as a regular middlewarehandler or as middleware
 	/// </summary>
 	// TODO: Implement parametized routes: /api/:id
 	public class Router : Middleware, IMiddelwareHandler
@@ -102,6 +103,11 @@ namespace HttpServer.Middleware
 			});
 		}
 
+		/// <summary>
+		/// Execute the specified request and response.
+		/// </summary>
+		/// <param name="request">Request.</param>
+		/// <param name="response">Response.</param>
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 
 			foreach (var route in _stack) {
@@ -129,6 +135,15 @@ namespace HttpServer.Middleware
 		internal void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
 			var route = new Route { Method = method, Path = path, Handler = handler, Middleware = middleware };
 			_stack.Add (route);
+		}
+
+		public override void Run(HTTPRequest request, HTTPResponse response) {
+			base.Run (request, response);
+
+			if (response.IsFinished)
+				return;
+
+			this.Execute (request, response);
 		}
 
 	}

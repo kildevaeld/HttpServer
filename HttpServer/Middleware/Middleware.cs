@@ -47,7 +47,7 @@ namespace HttpServer.Middleware
 			_errorHandlers.Add (handler);
 		}
 
-		public void Run(HTTPRequest request, HTTPResponse response) {
+		public virtual void Run(HTTPRequest request, HTTPResponse response) {
 
 			foreach (var handler in _handlers) {
 				try {

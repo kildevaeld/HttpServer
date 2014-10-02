@@ -30,7 +30,7 @@ namespace HttpServer
 		private void Initialize () {
 			// HACK:
 			this.Router = new Router ();
-			this.Router.Use (this.Router);
+			//this.Router.Use (this.Router);
 			this.Server.Handler = this.Handler = new HttpHandler (this.Router);
 
 		}
