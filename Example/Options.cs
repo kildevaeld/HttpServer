@@ -4,7 +4,7 @@ using CommandLine.Text;
 
 using Newtonsoft.Json;
 using System.IO;
-using SocketServer;
+using HttpServer;
 namespace Example
 {
 	public class OptionMiddleware {

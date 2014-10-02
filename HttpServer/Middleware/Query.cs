@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
 	// Extension for HTTPREQuest
 	static class QueryExtension {

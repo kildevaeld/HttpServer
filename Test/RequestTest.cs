@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Net.Sockets;
-using SocketServer;
+using HttpServer;
 
 using System.IO;
 using System.Threading.Tasks;

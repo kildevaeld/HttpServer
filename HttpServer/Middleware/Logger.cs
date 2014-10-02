@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-namespace SocketServer.Middlewares
+
+namespace HttpServer.Middleware
 {
 	/// <summary>
 	///  Very basic logging middleware

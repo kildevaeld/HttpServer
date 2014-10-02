@@ -6,7 +6,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SocketServer
+namespace HttpServer
 {
 	public class HTTPResponseEventArgs : EventArgs {
 		public HTTPResponse Response;

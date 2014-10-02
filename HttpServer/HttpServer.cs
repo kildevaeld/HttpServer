@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Sockets;
-using SocketServer;
-using SocketServer.Middlewares;
+using HttpServer;
+using HttpServer.Middleware;
 
-namespace Http
+namespace HttpServer
 {
 	/// <summary>
 	/// A simple facade class for Socketserver with a http handler.
@@ -29,7 +29,7 @@ namespace Http
 		private void Initialize () {
 			this.Router = new Router ();
 			this.Server.Handler = this.Handler = new HttpHandler ();
-			this.Handler.Middleware.Use (this.Router);
+			this.Use (this.Router);
 		}
 
 

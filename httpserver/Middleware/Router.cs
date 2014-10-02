@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
-
-
 
 	public class Route () {
 		public string Path;
@@ -18,6 +16,10 @@ namespace SocketServer.Middlewares
 		}
 	}
 
+	/// <summary>
+	/// Simple routing middleware.
+	/// </summary>
+	// TODO: Implement parametized routes: /api/:id
 	public class Router : IMiddelware
 	{
 
@@ -28,21 +30,58 @@ namespace SocketServer.Middlewares
 			_stack = new List<Route>();
 		}
 
-
+		/// <summary>
+		/// HTTP Get request
+		/// </summary>
+		/// <param name="path">Path.</param>
+		/// <param name="handlers">Handlers.</param>
 		public void Get(string path, params MiddlewareHandler[] handlers) {
 			var list = handlers.ToList ();
 			var handler = list.Last ();
 			this.Route (Methods.Get, path, list.GetRange(1,list.Count - 1), handler);
 		}
 
+		/// <summary>
+		/// HTTP Post request
+		/// </summary>
+		/// <param name="path">Path.</param>
+		/// <param name="handlers">Handlers.</param>
 		public void Post(string path, params MiddlewareHandler[] handlers) {	
 			var list = handlers.ToList ();
 			var handler = list.Last ();
 			this.Route (Methods.Post, path, list.GetRange(1,list.Count - 1), handler);
 		}
 
+		/// <summary>
+		/// HTTP Put request
+		/// </summary>
+		/// <param name="path">Path.</param>
+		/// <param name="handlers">Handlers.</param>
+		public void Put(string path, params MiddlewareHandler[] handlers) {	
+			var list = handlers.ToList ();
+			var handler = list.Last ();
+			this.Route (Methods.Put, path, list.GetRange(1,list.Count - 1), handler);
+		}
 
+		/// <summary>
+		/// HTTP Delete request
+		/// </summary>
+		/// <param name="path">Path.</param>
+		/// <param name="handlers">One or more handler</param>
+		public void Delete(string path, params MiddlewareHandler[] handlers) {	
+			var list = handlers.ToList ();
+			var handler = list.Last ();
+			this.Route (Methods.Delete, path, list.GetRange(1,list.Count - 1), handler);
+		}
 
+		/// <summary>
+		/// Match a route to a method on a class (T)
+		/// The mehod should take a HTTPRequest and a HTTPResonse object
+		/// </summary>
+		/// <param name="path">Path.</param>
+		/// <param name="action">The method on the object</param>
+		/// <param name="method">The HTTP Method eg. GET</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public void Match<T>(string path, string action, Methods method) {
 			var type = typeof(T);
 
@@ -62,7 +101,6 @@ namespace SocketServer.Middlewares
 				cMethod.Invoke(c, new object[] {request, response});
 			});
 		}
-			
 
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 
@@ -88,7 +126,7 @@ namespace SocketServer.Middlewares
 				
 		}
 
-		public void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
+		internal void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
 			var route = new Route { Method = method, Path = path, Handler = handler, Middleware = middleware };
 			_stack.Add (route);
 		}

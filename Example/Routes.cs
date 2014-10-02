@@ -1,8 +1,6 @@
 ﻿using System;
-using Http;
-using SocketServer;
-using SocketServer.Middlewares;
-using SocketServer.Middlewares.Multipart;
+using HttpServer;
+using HttpServer.Middleware;
 
 using System.Collections.Generic;
 namespace Example

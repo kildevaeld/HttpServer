@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Text;
-using SocketServer.Handlers;
+
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using SocketServer.Middlewares;
+using HttpServer.Middleware;
 using System.Net.Sockets;
-namespace SocketServer
+namespace HttpServer
 {
 	public class HttpHandler : ISocketServerHandler 
 	{
-		public Middleware Middleware;
+		public Middleware.Middleware Middleware;
 
 		public HttpHandler () 
 		{
-			Middleware = new Middleware ();
+			Middleware = new Middleware.Middleware ();
 
 			// Set threadpool
 			int w;

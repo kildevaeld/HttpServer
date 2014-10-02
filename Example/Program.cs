@@ -1,8 +1,6 @@
 ﻿using System;
-using Http;
-using SocketServer;
-using SocketServer.Middlewares;
-using SocketServer.Middlewares.Multipart;
+using HttpServer;
+using HttpServer.Middleware;
 
 using CommandLine;
 using System.IO;
@@ -60,20 +58,20 @@ namespace Example
 				return;
 			}
 
-			var server = new HttpServer ();
+			var server = new HttpServer.HttpServer ();
 				
 			// FIXME: ...
-			if (options.Verbose) {
-				(SocketServer.Server.Log as SocketServer.Logger).IsDebugEnabled  = true;
-				(SocketServer.Server.Log as SocketServer.Logger).IsErrorEnabled  = true;
-				(SocketServer.Server.Log as SocketServer.Logger).IsFatalEnabled  = true;
-				(SocketServer.Server.Log as SocketServer.Logger).IsWarnEnabled  = true;
-				(SocketServer.Server.Log as SocketServer.Logger).IsInfoEnabled  = true;
-			}
+			/*if (options.Verbose) {
+				(HttpServer.Server.Log as HttpServer.Logger).IsDebugEnabled  = true;
+				(HttpServer.Server.Log as HttpServer.Logger).IsErrorEnabled  = true;
+				(HttpServer.Server.Log as HttpServer.Logger).IsFatalEnabled  = true;
+				(HttpServer.Server.Log as HttpServer.Logger).IsWarnEnabled  = true;
+				(HttpServer.Server.Log as HttpServer.Logger).IsInfoEnabled  = true;
+			}*/
 
 
 			if (options.AccessLog) {
-				server.Use ((SocketServer.HTTPRequest request, SocketServer.HTTPResponse response) => {
+				server.Use ((HttpServer.HTTPRequest request, HttpServer.HTTPResponse response) => {
 					var date = DateTime.UtcNow;
 
 					var str = String.Format("{0:MM/dd/yy H:mm:ss}: {1} {2} {3}",date, request.Method, request.Path, request.UserAgent);

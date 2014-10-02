@@ -1,8 +1,8 @@
 ﻿using System;
-using SocketServer;
+using HttpServer;
 using Newtonsoft.Json;
 
-namespace SocketServer.Middlewares.Multipart {
+namespace HttpServer.Middleware {
 
 	public static class MultipartExtension {
 		public static T GetJSON<T>(this HTTPRequest request) {

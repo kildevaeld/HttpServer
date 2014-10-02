@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace SocketServer.Middlewares
+namespace HttpServer.Middleware
 {
 	public class Favicon : IMiddelware
 	{
