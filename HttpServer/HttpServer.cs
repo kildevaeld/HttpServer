@@ -28,18 +28,21 @@ namespace HttpServer
 		}
 
 		private void Initialize () {
+			// HACK:
 			this.Router = new Router ();
-			this.Server.Handler = this.Handler = new HttpHandler ();
-			this.Use (this.Router);
+			this.Router.Use (this.Router);
+			this.Server.Handler = this.Handler = new HttpHandler (this.Router);
+
 		}
 
 
 		#region Middlewares	
 		public void Use(MiddlewareHandler handler) {
+
 			this.Handler.Middleware.Use (handler);
 		}
 
-		public void Use(IMiddelware middleware) {
+		public void Use(IMiddelwareHandler middleware) {
 			this.Handler.Middleware.Use (middleware);
 		}
 
@@ -68,6 +71,7 @@ namespace HttpServer
 		#endregion
 
 		public void Listen (int port) {
+
 			this.Server.Listen (port);
 		}
 

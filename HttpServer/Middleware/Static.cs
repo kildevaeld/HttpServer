@@ -4,7 +4,7 @@ using System.Net.Mime;
 
 namespace HttpServer.Middleware
 {
-	public class Static : IMiddelware
+	public class Static : IMiddelwareHandler
 	{
 
 		public string _rootPath; 

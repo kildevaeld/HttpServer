@@ -8,34 +8,11 @@ using System.Collections.Generic;
 
 namespace Example
 {
-	// Extension for HTTPREQuest
-	static class QueryExtension {
-
-		// Jeg ved ikke om det er en fejl i mono eller, men jeg ka' ikke bruge extensions methods
-		// defineret i HttpServer herfra... hmmm...
-		public static IReadOnlyDictionary<string,object> Query (this HTTPRequest request) {
-			if (request.QueryString != null)
-				return Utils.ParseQueryString (request.QueryString);
-
-			return null;
-		}
-
-		public static object GetQuery(this HTTPRequest request, string prop) {
-			if (request.QueryString == null)
-				return null;
-
-			var query = Utils.ParseQueryString (request.QueryString);
-			if (query.ContainsKey (prop))
-				return query [prop];
-			return null;
-		}
-
-	}
 
 	class MainClass
 	{
 
-
+		private static HttpServer.HttpServer server;
 
 		public static void Main (string[] args)
 		{
@@ -58,8 +35,16 @@ namespace Example
 				return;
 			}
 
-			var server = new HttpServer.HttpServer ();
-				
+
+			Initialize (options);
+
+			server.Listen (options.Port);
+		}
+
+
+		private static void Initialize(Options options) {
+			server = new HttpServer.HttpServer ();
+
 			// FIXME: ...
 			/*if (options.Verbose) {
 				(HttpServer.Server.Log as HttpServer.Logger).IsDebugEnabled  = true;
@@ -85,8 +70,6 @@ namespace Example
 				server.Use (new Favicon { Path = Path.Combine(options.Root, "favicon.ico")});
 				server.Use (new Static (options.Root));
 				server.Use (new Html (options.Root));
-				server.Use (new Json ());
-
 			}
 
 			// Alle request som ikke er blevet fanget eller behandlet
@@ -95,23 +78,8 @@ namespace Example
 				response.Headers["Content-Type"] = "text/html; charset=utf-8";
 			});
 
-			server.Get("/router", (HTTPRequest request, HTTPResponse response) => {
-				response.Send("<p>This is created from the router middleware</p>");
-			});
 
-			// Dette link smider en Exception som bliver fanget af error handleren
-			server.Get("/errorenos-link", (HTTPRequest request, HTTPResponse response) => {
-				//throw new HTTPException(500);
-				throw new HTTPException("A terrible error!");
-			});
-				
-
-			server.Get ("/query-test", Routes.QueryTest);
-			server.Post ("/post", Routes.JSONTest);
-
-			server.Match<MatchTest> ("/match-test", "index" );
-
-
+			InitializeRoutes ();
 
 			// Handle not found!
 			// Dette er den sidste i rækken er middlewares. Hvis requestet ikke er blevet fanget eller
@@ -128,7 +96,25 @@ namespace Example
 			});
 
 
-			server.Listen (options.Port);
+		}
+
+		private static void InitializeRoutes() {
+
+			server.Get("/router-test", (HTTPRequest request, HTTPResponse response) => {
+				response.Send("<p>This is created from the router middleware</p>");
+			});
+
+			// Dette link smider en Exception som bliver fanget af error handleren
+			server.Get("/error-test", (HTTPRequest request, HTTPResponse response) => {
+				throw new HTTPException("A terrible error!");
+			});
+
+
+			server.Get ("/query-test", Routes.QueryTest);
+			server.Post ("/post-test", Routes.JSONTest);
+
+			server.Match<MatchTest> ("/match-test", "index" );
+
 		}
 	}
 }

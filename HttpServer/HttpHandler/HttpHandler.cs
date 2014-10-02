@@ -15,11 +15,17 @@ namespace HttpServer
 {
 	public class HttpHandler : ISocketServerHandler 
 	{
-		public Middleware.Middleware Middleware;
+		public IMiddleware Middleware;
 
-		public HttpHandler () 
+		public HttpHandler () : this(new Middleware.Middleware ())
 		{
-			Middleware = new Middleware.Middleware ();
+
+
+		}
+
+		public HttpHandler (IMiddleware middleware)  
+		{
+			Middleware = middleware;
 
 			// Set threadpool
 			int w;

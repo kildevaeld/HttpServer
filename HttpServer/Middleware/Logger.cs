@@ -6,7 +6,7 @@ namespace HttpServer.Middleware
 	/// <summary>
 	///  Very basic logging middleware
 	/// </summary>
-	public class Logger : IMiddelware
+	public class Logger : IMiddelwareHandler
 	{
 	
 

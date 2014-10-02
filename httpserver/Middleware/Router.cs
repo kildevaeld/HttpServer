@@ -20,7 +20,7 @@ namespace HttpServer.Middleware
 	/// Simple routing middleware.
 	/// </summary>
 	// TODO: Implement parametized routes: /api/:id
-	public class Router : IMiddelware
+	public class Router : Middleware, IMiddelwareHandler
 	{
 
 		protected IList<Route> _stack;

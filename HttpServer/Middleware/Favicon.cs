@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace HttpServer.Middleware
 {
-	public class Favicon : IMiddelware
+	public class Favicon : IMiddelwareHandler
 	{
 
 		public string Path { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace HttpServer.Middleware
 {
 	// Extension for HTTPREQuest
-	static class QueryExtension {
+	public static class QueryExtension {
 
 		public static IReadOnlyDictionary<string,object> Query (this HTTPRequest request) {
 			if (request.QueryString != null)
@@ -25,7 +25,7 @@ namespace HttpServer.Middleware
 
 	}
 
-	public class Query : IMiddelware
+	public class Query : IMiddelwareHandler
 	{
 		public Query ()
 		{

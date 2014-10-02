@@ -15,7 +15,7 @@ namespace HttpServer.Middleware {
 
 	}
 
-	public class Json : IMiddelware {
+	public class Json : IMiddelwareHandler {
 
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 			var contentType = request.Headers ["Content-Type"];
@@ -29,7 +29,7 @@ namespace HttpServer.Middleware {
 		}
 	}
 
-	public class FormData : IMiddelware {
+	public class FormData : IMiddelwareHandler {
 			
 		public void Execute(HTTPRequest request, HTTPResponse response) {
 			/*var contentType = (string)request.Headers ["Content-Type"];

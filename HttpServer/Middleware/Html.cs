@@ -3,7 +3,7 @@ using System.IO;
 
 namespace HttpServer.Middleware
 {
-	public class Html : IMiddelware
+	public class Html : IMiddelwareHandler
 	{
 		private string _rootPath;
 		private string _default = "index";

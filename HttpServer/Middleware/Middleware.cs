@@ -9,15 +9,22 @@ namespace HttpServer.Middleware
 	public delegate void MiddlewareHandler(HTTPRequest request, HTTPResponse response);
 	public delegate void MiddlewareErrorHandler(HTTPRequest request, HTTPResponse response, HTTPException exception);
 
-	public interface IMiddelware {
+	public interface IMiddelwareHandler {
 		void Execute(HTTPRequest request, HTTPResponse response);
 	}
 
+	public interface IMiddleware {
+
+		void Use (MiddlewareHandler handler);
+		void Use (IMiddelwareHandler middleware);
+		void Use (MiddlewareErrorHandler handler);
+		void Run (HTTPRequest request, HTTPResponse response);
+	}
 	/// <summary>
 	///  A middleware is a method execute in sekvens every client request.
 	///  
 	/// </summary>
-	public class Middleware
+	public class Middleware : IMiddleware
 	{
 		private IList<MiddlewareHandler> _handlers;
 		private IList<MiddlewareErrorHandler> _errorHandlers;
@@ -32,7 +39,7 @@ namespace HttpServer.Middleware
 			_handlers.Add (handler);
 		}
 
-		public void Use(IMiddelware middleware) {
+		public void Use(IMiddelwareHandler middleware) {
 			_handlers.Add (middleware.Execute);
 		}
 
