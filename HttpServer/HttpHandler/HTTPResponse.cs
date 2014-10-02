@@ -63,6 +63,10 @@ namespace SocketServer
 			return this.Send (200, body);
 		}
 
+		public int SendFormat(string body, params object[] args) {
+			return this.Send (200, string.Format (body, args));
+		}
+
 		/// <summary>
 		/// Send message to client with optional body and end the response
 		/// </summary>

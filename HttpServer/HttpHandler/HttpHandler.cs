@@ -9,11 +9,11 @@ using SocketServer.Middlewares;
 using System.Net.Sockets;
 namespace SocketServer
 {
-	public class SocketHTTPHandler : ISocketServerHandler 
+	public class HttpHandler : ISocketServerHandler 
 	{
 		public Middleware Middleware;
 
-		public SocketHTTPHandler () 
+		public HttpHandler () 
 		{
 			Middleware = new Middleware ();
 
@@ -24,8 +24,7 @@ namespace SocketServer
 
 			ThreadPool.SetMinThreads (20, c);
 		}
-
-		// TODO: Does not handle request larger than 1024 bytes. Implement Reader as a streamer
+			
 		public void Initialize (ISocketClient client)
 		{
 

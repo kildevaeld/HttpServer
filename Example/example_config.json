@@ -1,0 +1,8 @@
+﻿{
+	"port": 8080,
+	"loglevel": "Debug",
+	"root": "Public",
+	"verbose": false,
+	"accesslog" : true
+}
+
