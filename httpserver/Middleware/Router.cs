@@ -70,8 +70,6 @@ namespace SocketServer.Middlewares
 			_stack.Add (route);
 		}
 
-
-	
 	}
 }
 
