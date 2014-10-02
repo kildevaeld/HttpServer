@@ -47,7 +47,11 @@ namespace HttpServer
 				var res = new HTTPResponse (client);
 
 				using (var stream = new NetworkStream(client.Socket, false)) {
-					req.ParseRequest(stream);
+					try {
+						req.ParseRequest(stream);
+					} catch (HTTPException e) {
+						res.Send(e.StatusCode, e.Message);
+					}
 				}
 			
 				// Run middleware

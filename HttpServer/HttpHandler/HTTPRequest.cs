@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
@@ -109,14 +110,18 @@ namespace HttpServer
 					if (cl != null) {
 						var buffer = new char[Convert.ToInt32 (cl)];
 						var len = reader.Read (buffer, 0, buffer.Length);
-
 						this.Body = new String (buffer);
 					}
+
 				} else if (!reader.EndOfStream) {
+					var l = reader.ReadLine ();
+					// If it's noise, then just return
+					if (l == "" || l == null)
+						return;
+					// Body with no content-length... tsk tsk..
 					throw new HTTPException (400, HttpStatusCodes.Get (400));
 				}
-
-
+					
 			}
 
 

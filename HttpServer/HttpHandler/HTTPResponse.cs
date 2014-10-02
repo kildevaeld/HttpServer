@@ -117,7 +117,7 @@ namespace HttpServer
 			if (this.Body == null) {
 				this.Body = HttpStatusCodes.Get (this.StatusCode);
 			}
-
+			this.Headers ["Content-Length"] = this.Body.Length.ToString();
 			var ret = this.Write (this.ToString ());
 
 			this.End (); // Flag finished
