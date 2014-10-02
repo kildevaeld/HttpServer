@@ -3,6 +3,9 @@ using HttpServer;
 using HttpServer.Middleware;
 
 using System.Collections.Generic;
+
+using Newtonsoft.Json.Linq;
+
 namespace Example
 {
 	public static class Routes
@@ -19,6 +22,11 @@ namespace Example
 
 		public static void JSONTest(HTTPRequest request, HTTPResponse response) {
 			var json = request.GetJSON();
+			if (json == null)
+				return;
+			var o = (JObject)json;
+			o.Add ("postProp", "This property is set from c#");
+			//var d = new J
 			response.Headers["content-type"] = "application/json";
 			response.Send(json.ToString()); 
 
