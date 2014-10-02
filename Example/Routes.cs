@@ -26,7 +26,7 @@ namespace Example
 				return;
 			var o = (JObject)json;
 			o.Add ("postProp", "This property is set from c#");
-			//var d = new J
+
 			response.Headers["content-type"] = "application/json";
 			response.Send(json.ToString()); 
 

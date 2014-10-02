@@ -1,10 +1,10 @@
 ﻿using System;
 using HttpServer;
-using HttpServer.Middlewares;
+using HttpServer.Middleware;
 using zlib;
 namespace Middlewares
 {
-	public class Compression : IMiddelware
+	public class Compression : IMiddelwareHandler
 	{
 		public Compression ()
 		{

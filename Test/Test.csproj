@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="RequestTest.cs" />
     <Compile Include="ResponseTest.cs" />
-    <Compile Include="MockClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
