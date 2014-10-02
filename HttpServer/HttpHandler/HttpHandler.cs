@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using HttpServer.Middleware;
 using System.Net.Sockets;
+
+using SocketServer;
+using SocketServer.Handlers;
+
 namespace HttpServer
 {
 	public class HttpHandler : ISocketServerHandler 
