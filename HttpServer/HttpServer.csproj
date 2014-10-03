@@ -47,17 +47,18 @@
     <Compile Include="Middleware\Html.cs" />
     <Compile Include="Middleware\Logger.cs" />
     <Compile Include="Middleware\Middleware.cs" />
-    <Compile Include="Middleware\Multipart.cs" />
     <Compile Include="Middleware\Static.cs" />
     <Compile Include="HttpHandler\HttpHandler.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Middleware\Favicon.cs" />
-    <Compile Include="Middleware\Query.cs" />
     <Compile Include="Middleware\Router.cs" />
+    <Compile Include="Extensions\Query.cs" />
+    <Compile Include="Extensions\Multipart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HttpHandler\" />
     <Folder Include="Middleware\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SocketServer\SocketServer\SocketServer.csproj">

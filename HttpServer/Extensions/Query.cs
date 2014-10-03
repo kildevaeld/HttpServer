@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HttpServer.Middleware
+namespace HttpServer.Extensions
 {
 	// Extension for HTTPREQuest
 	public static class QueryExtension {
