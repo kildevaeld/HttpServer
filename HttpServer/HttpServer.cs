@@ -37,7 +37,7 @@ namespace HttpServer
 		}
 			
 		private void Initialize () {
-			// HACK:
+
 			this.Router = new Router ();
 			this.Server.Handler = this.Handler = new HttpHandler (this.Router);
 

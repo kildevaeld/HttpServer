@@ -24,7 +24,7 @@ namespace Example
 					try {
 						options = Options.LoadFromFile (options.ConfigFile);
 					} catch (Exception e) {
-						Console.WriteLine ("Config file not found!" + e);
+						Console.WriteLine ("Config file not found or could not be parsed!" + e);
 						return;
 					}
 				}
