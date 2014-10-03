@@ -15,7 +15,7 @@ server.Listen(80);
 ```
 
 ## Middleware
-Middleware is run in the order, which they are "Used". If a middleware ends the the request (eg. Sends a response to the client), the remaining middleware in the stack, will not be run.
+Middleware is run in the order, which they are "Used". If a middleware ends the the request (eg. Sends a response to the client), the remaining middleware in the stack will not be run.
 
 ```csharp
 
@@ -45,13 +45,17 @@ server.Get("/another-route", (HTTPRequest request, HTTPResponse response) => {
   response.SendFile(someFilePath);
 });
 
+// Or you can use multiple middleware pr route eg:
+
+server.Get("/some-private-route", SomeMiddleWareAuthenticationThingy, (HTTPRequest request, HTTPResponse response) => {
+  response.SendFile(someFilePath);
+});
+
 server.Post(....);
 
 server.Delete(...);
 
 server.Put(...);
-
-
 
 
 ```
@@ -64,3 +68,4 @@ server.Use(HTTPRequest request, HTTPResponse response, HTTPException exception) 
   request.Send(exception.StatusCode, exception.Message);
 });
 
+```
