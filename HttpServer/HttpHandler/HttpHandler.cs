@@ -30,9 +30,9 @@ namespace HttpServer
 			// Set threadpool
 			int w;
 			int c;
-			ThreadPool.GetMinThreads(out w, out c);
+			//ThreadPool.GetMinThreads(out w, out c);
 
-			ThreadPool.SetMinThreads (20, c);
+			//ThreadPool.SetMinThreads (20, c);
 		}
 			
 		public void Initialize (ISocketClient client)

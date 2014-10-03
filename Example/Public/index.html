@@ -28,8 +28,15 @@
         	</section>
 			<section class="row">
 				<div class="col-lg-4 col-md-4">
-					<h3>Post/Json Test</h3>
+					<h3>Post Test</h3>
 					<form action="/post-test" method="post">
+						<div class="form-group">
+							<label for="type">Encoding type</label>
+							<select name="type">
+								<option value="application/x-www-form-urlencoded">UrlEncoded</option>
+								<option value="application/json">JSON</option>
+							</select>
+						</div>
 						<div class="form-group">
 							<label for="name">Name</label>
 							<input type="text" name="name" class="form-control"/>

@@ -23,17 +23,14 @@ $(function () {
 			out[$(this).attr('name')] = $(this).val();
 		});
 
-		/*console.log(out);
-		$.post('/post-test',out,function (data) {
-			$('#json-result').text(data);
-		}, 'application/json')*/
 
+		var data = out["type"] == "application/json" ? JSON.stringify(out) : out
 		$.ajax({
 			type: "POST",
 			url: '/post-test',
-			data: JSON.stringify(out),
+			data: data,
 			dataType: 'json',
-			contentType: 'application/json'
+			contentType: out['type']
 		}).done(function (data) {
 			$('#json-result .result').text(JSON.stringify(data, null, 4));
 		})
