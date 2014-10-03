@@ -100,3 +100,24 @@ if (some != null) {
 
 
 ```
+
+### application/json / x-form-urlencoded
+
+
+```csharp
+
+var json = request.getJSON();
+
+// OR
+
+var json = request.getJSON<SomeClass>();
+
+// OR
+
+var urlencoded = request.GetFormUrlEncoded();
+
+// Or any of the above
+
+var body = request.GetBody();
+
+```
