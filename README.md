@@ -69,3 +69,26 @@ server.Use(HTTPRequest request, HTTPResponse response, HTTPException exception) 
 });
 
 ```
+
+## The HTTPRequest object
+
+### Query parameters
+
+```csharp
+
+// /route?some=query
+
+var query = request.Query();
+
+if (query != null)
+  Console.WriteLine("Got some : {0}", query["some"]);
+
+// OR
+var some = request.GetQuery("some");
+if (some != null) {
+  Console.WriteLine("Got some : {0}", some); 
+}
+
+
+
+```
