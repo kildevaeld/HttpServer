@@ -4,6 +4,14 @@ HttpServer
 Middleware based httpserver inspired by Sinatra, Expressjs and the likes.
 
 
+## Installation
+
+```bash
+git clone https://github.com/kildevaeld/HttpServer.git
+cd HttpServer &&  git submodule update --init
+
+```
+
 ## Usage
 
 ```csharp
