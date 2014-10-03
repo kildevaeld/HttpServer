@@ -68,6 +68,25 @@ server.Put(...);
 
 ```
 
+### Matching
+
+```csharp
+
+class SomeClass {
+
+  [Route("/some-route")] // Defaults to a get request
+  public void Index(HTTPRequest request, HTTPResponse response) {}
+  
+  [Route("/some-other/route", Method = Methods.Get)]
+  public void Show(HTTPRequest request, HTTPResponse response) {}
+  
+}
+
+server.Match<SomeClass>();
+
+```
+
+
 ## Custom error handling.
 
 ```csharp
