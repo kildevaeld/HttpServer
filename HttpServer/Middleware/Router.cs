@@ -138,6 +138,18 @@ namespace HttpServer.Middleware
 			});
 		}
 
+		public void Match<T> () {
+			var methods = typeof(T).GetMethods ();
+
+			foreach (var m in methods) {
+				var attr = m.GetCustomAttribute<RouteAttribute> ();
+				if (attr == null)
+					continue;
+				this.Match<T> (attr.Path, m.Name, attr.Method);
+
+			}
+		}
+
 		/// <summary>
 		/// Execute the specified request and response.
 		/// </summary>

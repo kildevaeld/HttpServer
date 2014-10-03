@@ -44,6 +44,21 @@ namespace Test
 			mock.Verify (c => c.Send ( It.Is<byte[]>( by => by.SequenceEqual(b)), 80));
 		}
 
+		[Test]
+		public void SendFormatTest () {
+			var mock = new Mock<SocketServer.ISocketClient> ();
+
+			var response = new HTTPResponse (mock.Object);
+
+			response.Headers ["Content-Type"] = "text/html";
+			response.SendFormat("<p>Hello, {0}</p>", "Bjarne");
+
+			var b = GetBytes ("HTTP/1.0 200\r\nContent-Type: text/html\r\n" +
+				"Content-Length: 20\r\n\r\n<p>Hello, Bjarne</p>");
+
+			mock.Verify (c => c.Send ( It.Is<byte[]>( by => by.SequenceEqual(b)), 81));
+		}
+
 
 		private string GetString(byte[] s) {
 			return Encoding.UTF8.GetString(s);

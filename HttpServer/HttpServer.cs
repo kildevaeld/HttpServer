@@ -117,6 +117,10 @@ namespace HttpServer
 		public void Match<T> (string path, string action, Methods method = Methods.Get) {
 			this.Router.Match<T> (path, action, method);
 		}
+
+		public void Match<T> () {
+			this.Router.Match<T> ();
+		}
 		#endregion
 
 		/// <summary>
