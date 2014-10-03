@@ -69,6 +69,36 @@ namespace HttpServer
 			return string.Join(",\n",o);
 
 		}
+
+		// Shamelessly borrowed from expressjs@3
+		public static Regex PathToRegex(string path, ref List<string>outKeys) {
+			var keys = new List<object> ();
+			var p = Regex.Replace(path,"\\/\\(", "(?:/");
+			p = Regex.Replace (p, "(\\/)?(\\.)?:(\\w+)(?:(\\(.*?\\)))?(\\?)?(\\*)?", delegate(Match match) {
+
+				string slash = match.Groups[1].Value, format = match.Groups[2].Value, key = match.Groups[3].Value,
+				capture = match.Groups[4].Value, optional = match.Groups[5].Value, star = match.Groups[6].Value;
+				//keys.Add(new { Name = key, Optional = string.IsNullOrEmpty(optional) ? false : true });
+				keys.Add(key);
+
+				var opt = string.IsNullOrEmpty(optional) ? false : true ;
+				return "" 
+					+ (opt ? "" : slash) 
+					+ "(?:" 
+					+ (opt ? slash : ""
+					)
+					+ (string.IsNullOrEmpty(format) ? "" : format)
+					+ (!string.IsNullOrEmpty(capture) ? capture : "([^/]+?)") + ')'
+					+ (opt ? optional : "")
+					+ (!string.IsNullOrEmpty(star) ? "(/*)?" : "");
+
+			});
+			foreach (var k in keys)
+				outKeys.Add ((string)k);
+			p = Regex.Replace (p, "([\\/.])","\\$1",RegexOptions.IgnoreCase);
+			p = Regex.Replace (p, "\\*", "(.*)");
+			return new Regex ("^" + p + "$");
+		}
 			
 	}
 

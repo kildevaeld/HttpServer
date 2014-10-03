@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,8 @@ namespace HttpServer.Middleware
 	/// Represent a route
 	/// </summary>
 	public class Route : IMiddelwareHandler {
+
+		public Regex Regexp;
 		/// <summary>
 		/// The route path
 		/// </summary>
@@ -30,7 +33,7 @@ namespace HttpServer.Middleware
 		/// </summary>
 		/// <param name="path">Path.</param>
 		public bool Match(string path) {
-			return path == Path;
+			return this.Regexp.IsMatch (path);
 		}
 
 		/// <summary>
@@ -161,6 +164,8 @@ namespace HttpServer.Middleware
 
 		internal void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
 			var route = new Route { Method = method, Path = path, Handler = handler, Middleware = middleware };
+			var keys = new List<string> ();
+			route.Regexp = Utils.PathToRegex (path, ref keys);
 			this.Use (route);
 		}
 			
