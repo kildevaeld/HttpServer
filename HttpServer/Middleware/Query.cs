@@ -24,16 +24,6 @@ namespace HttpServer.Middleware
 		}
 
 	}
-
-	public class Query : IMiddelwareHandler
-	{
-		public Query ()
-		{
-		}
-
-		public void Execute(HTTPRequest request, HTTPResponse response) {
-
-		}
-	}
+		
 }
 
