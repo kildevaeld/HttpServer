@@ -119,7 +119,7 @@ namespace Example
 			server.Get ("/query-test", Routes.QueryTest);
 			server.Post ("/post-test", Routes.JSONTest);
 
-			server.Match<MatchTest> ("/match-test", "index" );
+			server.Match<MatchTest> ();
 
 		}
 	}

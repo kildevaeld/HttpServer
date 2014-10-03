@@ -54,6 +54,7 @@
     <Compile Include="Middleware\Router.cs" />
     <Compile Include="Extensions\Query.cs" />
     <Compile Include="Extensions\Multipart.cs" />
+    <Compile Include="RouteAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HttpHandler\" />
