@@ -2,7 +2,8 @@
 
 A simple console application :
 
-Usage: 
+Usage:
+
   -c, --config     
 
   -p, --port       (Default: 8080) 
@@ -14,3 +15,8 @@ Usage:
   -l, --log        (Default: False) 
 
   --help           Display this help screen.
+
+
+The config options takes a path to a json file. 
+Valid fields are, port, root
+
