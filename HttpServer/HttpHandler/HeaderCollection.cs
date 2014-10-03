@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Collections;
 namespace HttpServer
 {
 	/// <summary>
 	/// Header collection.
 	/// </summary>
-	public class HeaderCollection
+	public class HeaderCollection : IEnumerable
 	{
 		private Dictionary<string,string> _headers;
 
@@ -67,6 +67,15 @@ namespace HttpServer
 				return str;
 		}
 
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return (IEnumerator) GetEnumerator();
+		}
+
+		public IDictionary<string, string> GetEnumerator()
+		{
+			return _headers;
+		}
 	}
 }
 

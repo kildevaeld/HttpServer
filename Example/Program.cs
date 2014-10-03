@@ -5,6 +5,7 @@ using HttpServer.Middleware;
 using CommandLine;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Example
 {
@@ -109,6 +110,11 @@ namespace Example
 				throw new HTTPException("A terrible error!");
 			});
 
+			server.Get("/request-test", (HTTPRequest request, HTTPResponse response) => {
+				response.Headers["Content-Type"] = "text/plain";
+
+				response.Send(request.ToString());
+			});
 
 			server.Get ("/query-test", Routes.QueryTest);
 			server.Post ("/post-test", Routes.JSONTest);

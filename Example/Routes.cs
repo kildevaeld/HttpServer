@@ -1,10 +1,12 @@
 ﻿using System;
 using HttpServer;
-using HttpServer.Middleware;
-
+//using HttpServer.Middleware;
+using HttpServer.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Example
 {
@@ -21,14 +23,32 @@ namespace Example
 		}
 
 		public static void JSONTest(HTTPRequest request, HTTPResponse response) {
-			var json = request.GetJSON();
+			var json = request.GetBody();
 			if (json == null)
 				return;
-			var o = (JObject)json;
-			o.Add ("postProp", "This property is set from c#");
 
 			response.Headers["content-type"] = "application/json";
-			response.Send(json.ToString()); 
+
+			if (json is JObject) {
+				var o = (JObject)json;
+				o.Add ("postProp", "This property is set from c#");
+				response.Send(o.ToString()); 
+			} else {
+				var o = (IReadOnlyDictionary<string,object>)json;
+				var d = new Dictionary<string,object> ();
+
+				foreach (var kv in o) {
+					d [kv.Key] = kv.Value;
+				}
+
+				d["postProp"] = "This property is set from c#";
+
+				response.Send(JsonConvert.SerializeObject(d)); 
+			}
+
+
+
+
 
 		}
 	}

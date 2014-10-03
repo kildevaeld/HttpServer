@@ -201,7 +201,8 @@ namespace HttpServer
 	
 		public override string ToString ()
 		{
-			return string.Format ("[HTTPRequest: Headers={0}, Method={1}, Body={2}, Version={3}, Protocol={4}, Path={5}, Query={6}]", Headers, Method, Body, Version, Protocol, Path, QueryString);
+			return string.Format ("[HTTPRequest: \nHeaders={0}, \nMethod={1}," +
+				" \nBody={2}, \nVersion={3}, \nProtocol={4}, \nPath={5}, \nQuery={6}\n]", Headers, Method, Body, Version, Protocol, Path, QueryString);
 		}
 	}
 }
