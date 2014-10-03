@@ -18,7 +18,7 @@ namespace Test
 
 		[Test]
 		public void SimpleSendTest () {
-			var mock = new Mock<SocketServer.ISocketClient> (); //(MockBehavior.Strict);
+			var mock = new Mock<SocketServer.ISocketClient> ();
 
 			var response = new HTTPResponse (mock.Object);
 
@@ -31,7 +31,7 @@ namespace Test
 
 		[Test]
 		public void ContentTypeTest () {
-			var mock = new Mock<SocketServer.ISocketClient> (); //(MockBehavior.Strict);
+			var mock = new Mock<SocketServer.ISocketClient> ();
 
 			var response = new HTTPResponse (mock.Object);
 
