@@ -18,5 +18,5 @@ Usage:
 
 
 The config options takes a path to a json file. 
-Valid fields are, port, root
+Valid fields are:  port and root
 
