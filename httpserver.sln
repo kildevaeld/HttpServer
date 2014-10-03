@@ -11,18 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpServer", "HttpServer\Ht
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{E0B821C2-1A3A-427D-BE9E-88F18417FA57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Middlewares", "Middlewares\Middlewares.csproj", "{292F3076-64E3-431C-A6CB-D2A6A6362472}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{292F3076-64E3-431C-A6CB-D2A6A6362472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{292F3076-64E3-431C-A6CB-D2A6A6362472}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{292F3076-64E3-431C-A6CB-D2A6A6362472}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{292F3076-64E3-431C-A6CB-D2A6A6362472}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D964FDB-46C2-4C5D-A6C6-9CB1ECBF65DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D964FDB-46C2-4C5D-A6C6-9CB1ECBF65DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D964FDB-46C2-4C5D-A6C6-9CB1ECBF65DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
