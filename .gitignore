@@ -37,4 +37,6 @@ _ReSharper*/
 *.pidb
 *.resources
 test-results/
+
 docs
+packages
