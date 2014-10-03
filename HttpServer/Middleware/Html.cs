@@ -3,6 +3,9 @@ using System.IO;
 
 namespace HttpServer.Middleware
 {
+	/// <summary>
+	/// Html middleware. 
+	/// </summary>
 	public class Html : IMiddelwareHandler
 	{
 		private string _rootPath;

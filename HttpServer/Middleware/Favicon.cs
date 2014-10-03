@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace HttpServer.Middleware
 {
+	/// <summary>
+	/// Favicon middleware
+	/// </summary>
 	public class Favicon : IMiddelwareHandler
 	{
 
