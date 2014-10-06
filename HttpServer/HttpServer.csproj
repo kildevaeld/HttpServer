@@ -58,6 +58,7 @@
     <Compile Include="Middleware\Route.cs" />
     <Compile Include="HttpHandler\HTTPRequestData.cs" />
     <Compile Include="Extensions\Params.cs" />
+    <Compile Include="Middleware\VirtualHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HttpHandler\" />

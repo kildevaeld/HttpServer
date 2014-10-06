@@ -65,6 +65,17 @@ namespace Example
 				});
 			}
 
+			var router = new Router ();
+
+			router.Get ("/rapper", (HTTPRequest request, HTTPResponse response) => {
+				response.Send("Rapper");
+			});
+
+			router.Use ((HTTPRequest request, HTTPResponse response) => {
+				response.Send(404);
+			});
+
+			server.Use (new VirtualHost ("*.localhost",router));
 
 
 			if (options.Root != null) {
