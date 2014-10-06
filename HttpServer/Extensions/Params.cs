@@ -20,7 +20,9 @@ namespace HttpServer.Extensions
 			if (p == null || !p.ContainsKey(param))
 				return default(T);
 
-			return (T)p [param];
+			var value = p [param];
+
+			return (T)Convert.ChangeType (value, typeof(T));
 		}
 
 

@@ -21,7 +21,7 @@ namespace Example
 
 		[Route("/match/:id")]
 		public void Params(HTTPRequest request, HTTPResponse response) {
-			response.SendFormat ("TADA! {0}", request.Param("id"));
+			response.SendFormat ("TADA! {0}", request.Param<int>("id"));
 		}
 	}
 }
