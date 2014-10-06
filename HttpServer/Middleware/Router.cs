@@ -1,62 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace HttpServer.Middleware
 {
-	/// <summary>
-	/// Represent a route
-	/// </summary>
-	public class Route : IMiddelwareHandler {
-		/// <summary>
-		/// The route path
-		/// </summary>
-		public string Path;
-		/// <summary>
-		/// The http method
-		/// </summary>
-		public Methods Method;
-		/// <summary>
-		/// The handler.
-		/// </summary>
-		public MiddlewareHandler Handler;
-		/// <summary>
-		/// The middleware.
-		/// </summary>
-		public IList<MiddlewareHandler> Middleware;
-		/// <summary>
-		/// Match the specified path.
-		/// </summary>
-		/// <param name="path">Path.</param>
-		public bool Match(string path) {
-			return path == Path;
-		}
-
-		/// <summary>
-		/// Execute the specified request and response.
-		/// </summary>
-		/// <param name="request">Request.</param>
-		/// <param name="response">Response.</param>
-		public void Execute(HTTPRequest request, HTTPResponse response) {
-			if (!Match (request.Path) || this.Method != request.Method)
-				return;
-			if (Middleware != null && Middleware.Count > 0) {
-				foreach (var m in Middleware) {
-					m (request, response);
-					if (response.IsFinished)
-						return;
-				}
-
-				if (response.IsFinished)
-					return;
-			}
-
-			Handler (request, response);
-			if (response.IsFinished)
-				return;
-		}
-	}
 
 	/// <summary>
 	/// Simple routing middleware.
@@ -161,6 +110,12 @@ namespace HttpServer.Middleware
 
 		internal void Route(Methods method, string path, IList<MiddlewareHandler>middleware, MiddlewareHandler handler) {
 			var route = new Route { Method = method, Path = path, Handler = handler, Middleware = middleware };
+
+			var keys = new List<string> ();
+
+			route.Regexp = Utils.PathToRegex (path, ref keys);
+			route.Keys = keys.ToArray ();
+
 			this.Use (route);
 		}
 			

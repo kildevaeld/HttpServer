@@ -64,10 +64,14 @@ namespace HttpServer
 
 		// TODO public string Accept { get; private set; } 
 		public string QueryString { get; private set; }
+
+		public HTTPRequestData Data { get; private set; }
+
 		#endregion
 
 		public HTTPRequest () {
 			this.Headers = new HeaderCollection ();
+			this.Data = new HTTPRequestData ();
 		}
 
 
