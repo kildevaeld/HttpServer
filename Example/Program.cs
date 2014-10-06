@@ -61,7 +61,7 @@ namespace Example
 					var date = DateTime.UtcNow;
 
 					var str = String.Format("{0:MM/dd/yy H:mm:ss}: {1} {2} {3}",date, request.Method, request.Path, request.UserAgent);
-					Console.WriteLine (str);
+					//Console.WriteLine (str);
 				});
 			}
 

@@ -54,7 +54,7 @@ namespace HttpServer
 			if (!Match (request.Path) || this.Method != request.Method)
 				return;
 
-
+			// Get parameters
 			if (this.Keys.Length > 0) {
 				var match = this.Regexp.Match (request.Path);
 
