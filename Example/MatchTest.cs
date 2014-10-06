@@ -1,5 +1,6 @@
 ﻿using System;
 using HttpServer;
+using HttpServer.Extensions;
 namespace Example
 {
 	public class MatchTest
@@ -18,6 +19,10 @@ namespace Example
 			response.Send ("Match test2");
 		}
 
+		[Route("/match/:id")]
+		public void Params(HTTPRequest request, HTTPResponse response) {
+			response.SendFormat ("TADA! {0}", request.Param("id"));
+		}
 	}
 }
 
