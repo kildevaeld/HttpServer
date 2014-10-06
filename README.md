@@ -51,6 +51,11 @@ server.Get("/some-private-route", SomeMiddleWareAuthenticationThingy, (HTTPReque
   response.SendFile(someFilePath);
 });
 
+
+server.Get("/api/:id", (HTTPRequest request, HTTPResponse response) => {
+  response.SendFormat("Got id : {0}", request.Param("id"));
+});
+
 server.Post(....);
 
 server.Delete(...);
